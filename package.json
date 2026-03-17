@@ -1,0 +1,14 @@
+{
+  "name": "gem-n-eye",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GEM N EYE — AI Monetization Blueprint Engine",
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "stripe": "^16.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEM N EYE — Deployment Checklist</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e2d9c5; max-width: 680px; margin: 40px auto; padding: 0 24px; }
+  h1 { color: #D4AF37; font-size: 1.5rem; border-bottom: 1px solid rgba(212,175,55,0.2); padding-bottom: 12px; }
+  h2 { color: #D4AF37; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.12em; margin: 32px 0 12px; }
+  .step { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; margin-bottom: 8px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; transition: background 0.15s; }
+  .step:hover { background: rgba(212,175,55,0.05); }
+  .step.done { opacity: 0.45; }
+  .step.done .body { text-decoration: line-through; }
+  .cb { width: 20px; height: 20px; border-radius: 6px; border: 2px solid rgba(212,175,55,0.35); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .step.done .cb { background: #D4AF37; border-color: #D4AF37; color: #08070e; }
+  .body { flex: 1; }
+  .title { font-weight: 700; font-size: 0.95rem; color: #ede6d0; }
+  .sub { font-size: 0.8rem; color: rgba(237,230,208,0.5); margin-top: 3px; line-height: 1.5; }
+  a { color: #D4AF37; }
+  .badge { display: inline-block; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+  .done-badge { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+  .todo-badge { background: rgba(212,175,55,0.08); color: #D4AF37; border: 1px solid rgba(212,175,55,0.2); }
+  .progress-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; margin-bottom: 32px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #D4AF37, #EAC84A); border-radius: 3px; transition: width 0.4s; }
+  #progress-label { font-size: 0.75rem; color: rgba(212,175,55,0.5); text-align: right; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h1>✦ GEM N EYE — Deployment Checklist</h1>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+<div id="progress-label">0 of 14 complete</div>
+
+<h2>✅ Already Done</h2>
+
+<div class="step done" onclick="toggle(this)">
+  <div class="cb">✓</div>
+  <div class="body"><div class="title">Supabase database schema created</div><div class="sub">Tables: profiles, spins, pending_grants + triggers</div></div>
+</div>
+<div class="step done" onclick="toggle(this)">
+  <div class="cb">✓</div>
+  <div class="body"><div class="title">Magic link email confirmed</div><div class="sub">Supabase Auth → Email provider enabled</div></div>
+</div>
+<div class="step done" onclick="toggle(this)">
+  <div class="cb">✓</div>
+  <div class="body"><div class="title">Supabase keys added to HTML</div><div class="sub">SUPA_URL and SUPA_ANON wired into gem-n-eye-slots.html</div></div>
+</div>
+<div class="step done" onclick="toggle(this)">
+  <div class="cb">✓</div>
+  <div class="body"><div class="title">API routes created</div><div class="sub">api/generate.js (Gemini) + api/webhook.js (Stripe)</div></div>
+</div>
+<div class="step done" onclick="toggle(this)">
+  <div class="cb">✓</div>
+  <div class="body"><div class="title">Logo added to page</div><div class="sub">gemneyelogo.png in header, gemneyeicon.png as favicon</div></div>
+</div>
+
+<h2>🚀 GitHub</h2>
+
+<div class="step" onclick="toggle(this)">
+  <div class="cb"></div>
+  <div class="body">
+    <div class="title">Create repo on GitHub</div>
+    <div class="sub">Go to <a href="https://github.com/new" target="_blank">github.com/new</a> → name it <strong>gem-n-eye</strong> → ❌ do NOT check "Initialize with README" → Create</div>
+  </div>
+</div>
+<div class="step" onclick="toggle(this)">
+  <div class="cb"></div>
+  <div class="body">
+    <div class="title">Run push-to-github.sh</div>
+    <div class="sub">Open Terminal → cd into GemNEye folder → run: <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;">chmod +x push-to-github.sh && ./push-to-github.sh</code></div>
+  </div>
+</div>
+
+<h2>⚡ Vercel</h2>
+
+<div class="step" onclick="toggle(this)">
+  <div class="cb"></div>
+  <div class="body">
+    <div class="title">Import repo to Vercel</div>
+    <div class="sub"><a href="https://vercel.com/new" target="_blank">vercel.com/new</a> → Import from GitHub → select gem-n-eye</div>
+  </div>
+</div>
+<div class="step" onclick="toggle(this)">
+  <div class="cb"></div>
+  <div class="body">
+    <div class="title">Get Gemini API key</div>
+    <div class="sub">Free at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> → copy the key</div>
+  </div>
+</div>
+<div class="step" onclick="toggle(this)">
+  <div class="cb"></div>
+  <div class="body">
+    <div class="title">Add environment variables in Vercel</div>
+    <div class="sub">
+      Project Settings → Environment Variables → add all 5:<br>
+      <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:0.75rem;">GEMINI_API_KEY · SUPABASE_URL · SUPABASE_ANON_KEY · SUPABASE_SERVICE_KEY · STRIPE_SECRET_KEY</code>
+    </div>
+  </div>
+</div>
+<div class="step" onclick="toggle(this)">
+  <div class="cb"></div>
+  <div class="body">
+    <div class="title">Deploy on Vercel</div>
+    <div class="sub">Click Deploy — wait for the green checkmark. Copy your live URL (e.g. gem-n-eye.vercel.app)</div>
+  </div>
+</div>
+
+<h2>💳 Stripe</h2>
+
+<div class="step" onclick="toggle(this)">
+  <div class="cb"></div>
+  <div class="body">
+    <div class="title">Add Stripe webhook endpoint</div>
+    <div class="sub">Stripe Dashboard → Developers → Webhooks → Add endpoint<br>URL: <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:0.75rem;">https://YOUR-VERCEL-URL.vercel.app/api/webhook</code><br>Event: <strong>checkout.session.completed</strong></div>
+  </div>
+</div>
+<div class="step" onclick="toggle(this)">
+  <div class="cb"></div>
+  <div class="body">
+    <div class="title">Add STRIPE_WEBHOOK_SECRET to Vercel</div>
+    <div class="sub">Copy the signing secret from the webhook → paste into Vercel env vars → Redeploy</div>
+  </div>
+</div>
+<div class="step" onclick="toggle(this)">
+  <div class="cb"></div>
+  <div class="body">
+    <div class="title">Set Stripe success redirect URLs</div>
+    <div class="sub">
+      In Stripe, edit each payment link's "After payment" redirect:<br>
+      $9 link → <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:0.75rem;">https://YOUR-URL/gem-n-eye-slots.html</code><br>
+      $19 link → same URL<br>
+      (Webhook handles the grant automatically — no URL params needed anymore)
+    </div>
+  </div>
+</div>
+
+<h2>🧪 Test</h2>
+
+<div class="step" onclick="toggle(this)">
+  <div class="cb"></div>
+  <div class="body">
+    <div class="title">End-to-end test</div>
+    <div class="sub">Visit live URL → sign in with magic link → spin → verify blueprint generates → buy $9 credits → verify credits appear in Supabase profiles table</div>
+  </div>
+</div>
+
+<script>
+  function toggle(el) {
+    el.classList.toggle('done');
+    const cb = el.querySelector('.cb');
+    cb.textContent = el.classList.contains('done') ? '✓' : '';
+    updateProgress();
+    save();
+  }
+  function updateProgress() {
+    const all = document.querySelectorAll('.step').length;
+    const done = document.querySelectorAll('.step.done').length;
+    const pct = Math.round((done / all) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = done + ' of ' + all + ' complete';
+  }
+  function save() {
+    const states = [...document.querySelectorAll('.step')].map(s => s.classList.contains('done'));
+    localStorage.setItem('gne_deploy', JSON.stringify(states));
+  }
+  function load() {
+    const saved = JSON.parse(localStorage.getItem('gne_deploy') || '[]');
+    const steps = document.querySelectorAll('.step');
+    saved.forEach((done, i) => {
+      if (done && steps[i]) {
+        steps[i].classList.add('done');
+        steps[i].querySelector('.cb').textContent = '✓';
+      }
+    });
+    updateProgress();
+  }
+  load();
+</script>
+</body>
+</html>

@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEM N EYE — AI Monetization Blueprint Engine</title>
+  <meta name="description" content="Spin 3 Google AI tools and get an instant monetization blueprint. Upgrade for a full 90-day strategy with competitive analysis, ad copy, and week-by-week roadmap.">
+  <link rel="icon" type="image/png" href="./gemneyeicon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold:        #D4AF37;
+      --gold-bright: #EAC84A;
+      --gold-dim:    rgba(212,175,55,0.14);
+      --gold-glow:   rgba(212,175,55,0.38);
+      --gold-border: rgba(212,175,55,0.28);
+      --crimson:     #E01A2F;
+      --bg:          #08070e;
+      --surface:     rgba(14,11,24,0.97);
+      /* kept for any inline references */
+      --amber: #D4AF37;
+      --amber-dim: rgba(212,175,55,0.14);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 80% 40% at 50% 0%,  rgba(212,175,55,0.07), transparent),
+        radial-gradient(ellipse 50% 50% at 100% 100%, rgba(224,26,47,0.04), transparent),
+        url("data:image/svg+xml,%3Csvg width='44' height='44' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='22' cy='22' r='0.7' fill='rgba(212,175,55,0.07)'/%3E%3C/svg%3E");
+      color: #ede6d0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Glass card ── */
+    .glass {
+      background: var(--surface);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .amber-ring {
+      border: 1px solid var(--gold-border);
+      box-shadow:
+        0 0 0 1px rgba(212,175,55,0.06),
+        0 0 60px rgba(212,175,55,0.05),
+        0 32px 80px rgba(0,0,0,0.65),
+        inset 0 1px 0 rgba(212,175,55,0.1);
+    }
+
+    /* ── Brand ── */
+    .brand-text {
+      font-family: 'Cinzel Decorative', serif;
+      background: linear-gradient(160deg, #F5D76A 0%, #D4AF37 35%, #A8860A 65%, #EAC84A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 24px rgba(212,175,55,0.5));
+    }
+
+    /* ── Casino decorative rule ── */
+    .casino-rule {
+      display: flex; align-items: center; gap: 10px;
+      color: rgba(212,175,55,0.3);
+      font-size: 11px; letter-spacing: 0.4em;
+    }
+    .casino-rule::before, .casino-rule::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.35), transparent);
+    }
+
+    /* ── Casino top strip on machine ── */
+    .casino-top-strip {
+      height: 4px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(212,175,55,0.1) 10%,
+        var(--gold) 30%,
+        var(--gold-bright) 50%,
+        var(--gold) 70%,
+        rgba(212,175,55,0.1) 90%,
+        transparent 100%);
+      border-radius: 2rem 2rem 0 0;
+      margin: -1.5rem -1.5rem 1.5rem;
+    }
+
+    /* ── Pill tabs ── */
+    .pill-track {
+      display: flex;
+      background: rgba(8,7,14,0.98);
+      border: 1px solid rgba(212,175,55,0.12);
+      border-radius: 14px; padding: 4px; gap: 2px;
+    }
+    .pill-btn {
+      flex: 1; padding: 9px 6px; font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.07em; border-radius: 10px;
+      transition: all 0.2s ease; color: #3d3558; text-align: center;
+      cursor: pointer; border: none; background: none;
+      font-family: inherit; white-space: nowrap;
+    }
+    .pill-btn.active {
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+      color: #08070e;
+      box-shadow: 0 0 18px var(--gold-glow);
+    }
+    .pill-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    /* ── Slot machine ── */
+    .slot-window {
+      height: 100px;
+      background: linear-gradient(180deg, #080610 0%, #0e0c1a 50%, #080610 100%);
+      border: 2px solid rgba(212,175,55,0.45);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      box-shadow:
+        inset 0 0 40px rgba(0,0,0,0.9),
+        0 0 0 1px rgba(212,175,55,0.08),
+        0 4px 20px rgba(0,0,0,0.5);
+    }
+    /* gold shimmer line at center */
+    .slot-window::before {
+      content: ''; position: absolute; left: 0; right: 0;
+      top: 50%; transform: translateY(-50%); height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.6), transparent);
+      z-index: 3; pointer-events: none;
+    }
+    .slot-window::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(212,175,55,0.05) 0%,
+        transparent 25%,
+        transparent 75%,
+        rgba(0,0,0,0.4) 100%);
+      pointer-events: none; z-index: 2;
+    }
+    .reel-track {
+      position: absolute; top: 0; left: 0; width: 100%;
+      display: flex; flex-direction: column;
+      transition: transform 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .reel-item {
+      height: 100px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 900;
+      color: rgba(212,175,55,0.45);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      text-align: center; padding: 0 10px; flex-shrink: 0; line-height: 1.3;
+    }
+    .reel-item.winner {
+      color: var(--gold-bright);
+      text-shadow: 0 0 20px rgba(212,175,55,0.7), 0 0 40px rgba(212,175,55,0.35);
+    }
+
+    /* ── Reel frame ── */
+    .reel-frame {
+      background: linear-gradient(180deg, #130f20 0%, #0d0b18 100%);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 18px; padding: 8px 8px 6px;
+      box-shadow: inset 0 2px 16px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .reel-frame-label {
+      font-size: 7px; font-weight: 900;
+      color: rgba(212,175,55,0.28); text-transform: uppercase;
+      letter-spacing: 0.35em; text-align: center; margin-bottom: 6px;
+    }
+
+    /* ── Lever ── */
+    .lever-base {
+      width: 64px; height: 160px;
+      background: linear-gradient(180deg, #1a1528 0%, #0f0d1c 100%);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 32px; position: relative;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.7), inset 0 1px 0 rgba(212,175,55,0.08);
+      cursor: pointer;
+    }
+    .lever-base::after {
+      content: ''; position: absolute; bottom: 14px; left: 50%;
+      transform: translateX(-50%); width: 36px; height: 14px;
+      background: linear-gradient(180deg, #221d32, #16132a);
+      border-radius: 7px; border: 1px solid rgba(212,175,55,0.15);
+    }
+    .lever-shaft {
+      width: 10px; height: 90px;
+      background: linear-gradient(180deg, #aaa 0%, #eee 35%, #bbb 65%, #ddd 100%);
+      border-radius: 5px; position: absolute; left: 50%;
+      transform: translateX(-50%); bottom: 40px;
+      transform-origin: bottom center;
+      transition: transform 0.45s cubic-bezier(0.68,-0.55,0.27,1.55); z-index: 2;
+      box-shadow: 2px 0 6px rgba(0,0,0,0.5), -1px 0 3px rgba(255,255,255,0.08);
+    }
+    .lever-knob {
+      width: 46px; height: 46px;
+      background: radial-gradient(circle at 35% 30%, #ff6b7a, #CC1122 55%, #7a0010);
+      border-radius: 50%; position: absolute; top: -23px; left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 30px rgba(200,20,40,0.4), inset 0 1px 0 rgba(255,255,255,0.22);
+      transition: box-shadow 0.2s;
+    }
+    .lever-base:hover .lever-knob {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 50px rgba(200,20,40,0.6), inset 0 1px 0 rgba(255,255,255,0.22);
+    }
+    .lever-base:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 32px; }
+    .lever-pulled .lever-shaft { transform: translateX(-50%) rotate(38deg); }
+
+    /* ── Spin button ── */
+    .spin-btn {
+      background: linear-gradient(135deg, #F5D76A 0%, #D4AF37 40%, #A8860A 80%, #D4AF37 100%);
+      color: #08070e; font-weight: 900; font-size: 12px;
+      text-transform: uppercase; letter-spacing: 0.15em;
+      padding: 17px 48px; border-radius: 50px; border: none; cursor: pointer;
+      box-shadow: 0 0 36px rgba(212,175,55,0.45), 0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.28);
+      transition: box-shadow 0.2s, transform 0.15s; font-family: inherit;
+      position: relative; overflow: hidden;
+    }
+    .spin-btn::before {
+      content: ''; position: absolute; top: 0; left: -120%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.55s ease;
+    }
+    .spin-btn:hover:not(:disabled)::before { left: 160%; }
+    .spin-btn:hover:not(:disabled) {
+      box-shadow: 0 0 56px rgba(212,175,55,0.65), 0 10px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.28);
+      transform: translateY(-2px);
+    }
+    .spin-btn:active:not(:disabled) { transform: translateY(0); }
+    .spin-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .spin-btn:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+
+    /* ── Form fields ── */
+    .field {
+      width: 100%;
+      background: rgba(8,7,14,0.98);
+      border: 1px solid rgba(212,175,55,0.15);
+      border-radius: 12px; padding: 10px 14px;
+      font-size: 12px; font-weight: 600; color: #ede6d0;
+      font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+    }
+    .field:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-dim); }
+    .field::placeholder { color: #2e2844; }
+    select.field { cursor: pointer; }
+    select.field option { background: #0d0b18; color: #ede6d0; }
+
+    /* ── Toggle ── */
+    .toggle-wrap { position: relative; display: inline-block; width: 44px; height: 22px; flex-shrink: 0; }
+    .toggle-wrap input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: #1c1830; border-radius: 22px; transition: 0.3s; border: 1px solid rgba(212,175,55,0.1); }
+    .toggle-slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; bottom: 2px; background: #4a4060; border-radius: 50%; transition: 0.3s; }
+    input:checked + .toggle-slider { background: linear-gradient(135deg, var(--gold-bright), var(--gold)); border-color: var(--gold); box-shadow: 0 0 16px var(--gold-glow); }
+    input:checked + .toggle-slider::before { transform: translateX(22px); background: #08070e; }
+    .toggle-wrap:focus-within .toggle-slider { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    /* ── Skeleton loading ── */
+    .skeleton {
+      background: linear-gradient(90deg, rgba(212,175,55,0.04) 25%, rgba(212,175,55,0.1) 50%, rgba(212,175,55,0.04) 75%);
+      background-size: 200% 100%; animation: shimmer 1.6s infinite; border-radius: 8px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(90px);
+      background: #130f20; border: 1px solid var(--gold-border); color: #ede6d0;
+      font-size: 13px; font-weight: 700; padding: 12px 24px; border-radius: 50px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 24px var(--gold-dim);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 300; white-space: nowrap; pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Modal overlay ── */
+    .modal-bg {
+      position: fixed; inset: 0; background: rgba(4,3,10,0.97);
+      backdrop-filter: blur(16px); display: none;
+      align-items: center; justify-content: center; z-index: 200; padding: 16px;
+    }
+    .modal-bg.open { display: flex; }
+
+    /* ── Section labels ── */
+    .section-label {
+      font-size: 9px; font-weight: 900;
+      text-transform: uppercase; letter-spacing: 0.18em;
+    }
+
+    /* ── Step cards ── */
+    .step-card {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px;
+      background: rgba(212,175,55,0.03);
+      border: 1px solid rgba(212,175,55,0.1);
+      border-radius: 14px; transition: border-color 0.2s, background 0.2s;
+      min-width: 0; overflow: hidden; width: 100%;
+    }
+    .step-card:hover { border-color: rgba(212,175,55,0.28); background: rgba(212,175,55,0.06); }
+    .step-num {
+      min-width: 28px; width: 28px; height: 28px;
+      background: radial-gradient(circle, rgba(212,175,55,0.15), rgba(212,175,55,0.04));
+      border: 1px solid rgba(212,175,55,0.38);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 900; color: var(--gold);
+      box-shadow: 0 0 10px rgba(212,175,55,0.15); flex-shrink: 0;
+    }
+
+    /* ── Feed item ── */
+    .feed-item {
+      padding: 11px 14px;
+      background: rgba(212,175,55,0.03);
+      border: 1px solid rgba(212,175,55,0.1);
+      border-radius: 13px; transition: border-color 0.2s; animation: slideIn 0.3s ease;
+    }
+    .feed-item:hover { border-color: rgba(212,175,55,0.22); }
+    @keyframes slideIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── Tool pipeline bar ── */
+    .pipeline-bar {
+      display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+      background: rgba(212,175,55,0.05);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 14px; overflow-x: auto;
+    }
+    .pipeline-chip {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.3);
+      color: var(--gold-bright); font-size: 10px; font-weight: 900;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 5px 12px; border-radius: 8px; white-space: nowrap;
+    }
+    .pipeline-arrow { color: rgba(212,175,55,0.4); font-size: 14px; font-weight: 900; flex-shrink: 0; }
+    .tool-step-badge {
+      display: inline-block; font-size: 9px; font-weight: 900;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 3px 8px; border-radius: 6px; margin-bottom: 5px;
+      background: rgba(212,175,55,0.1); color: var(--gold); border: 1px solid rgba(212,175,55,0.25);
+    }
+    .result-easy { border-left: 3px solid rgba(16,185,129,0.6) !important; }
+    .result-adv  { border-left: 3px solid rgba(212,175,55,0.65) !important; }
+
+    /* ── Mode bar ── */
+    .mode-bar {
+      display: flex; gap: 6px;
+      background: rgba(8,7,14,0.98);
+      border: 1px solid rgba(212,175,55,0.12);
+      border-radius: 16px; padding: 5px;
+    }
+    .mode-btn {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 10px 8px; border-radius: 11px; border: 1px solid transparent;
+      font-family: inherit; font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      cursor: pointer; transition: all 0.2s ease; color: rgba(212,175,55,0.45); background: none;
+    }
+    .mode-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .mode-btn.active-easy {
+      background: rgba(16,185,129,0.12); color: #10b981;
+      border-color: rgba(16,185,129,0.3); box-shadow: 0 0 16px rgba(16,185,129,0.14);
+    }
+    .mode-btn.active-advanced {
+      background: var(--gold-dim); color: var(--gold);
+      border-color: var(--gold-border); box-shadow: 0 0 16px var(--gold-dim);
+    }
+    .mode-dot-easy { width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px rgba(16,185,129,0.6); flex-shrink: 0; }
+    .mode-dot-adv  { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px var(--gold-glow); flex-shrink: 0; }
+    .mode-hint { font-size: 9px; font-weight: 600; color: rgba(212,175,55,0.4); text-align: center; margin-top: 6px; letter-spacing: 0.03em; }
+
+    /* ── API status dot ── */
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Step text collapse ── */
+    .step-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .step-text.expanded {
+      display: block;
+      overflow: hidden;
+      -webkit-line-clamp: unset;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+    .step-toggle {
+      font-size: 9px; font-weight: 900; text-transform: uppercase;
+      letter-spacing: 0.1em; cursor: pointer; border: none; background: none;
+      font-family: inherit; padding: 4px 0 0; display: block;
+      color: rgba(212,175,55,0.5); transition: color 0.2s;
+    }
+    .step-toggle:hover { color: rgba(212,175,55,0.9); }
+
+    /* ── Jackpot pulse (result card) ── */
+    @keyframes jackpotReveal {
+      0%   { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+      40%  { box-shadow: 0 0 40px 8px rgba(212,175,55,0.3); }
+      100% { box-shadow: 0 0 60px rgba(212,175,55,0.05), 0 32px 80px rgba(0,0,0,0.65), inset 0 1px 0 rgba(212,175,55,0.1); }
+    }
+    #result-card:not(.hidden) { animation: jackpotReveal 0.9s ease-out forwards; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.15); border-radius: 2px; }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* ── Mobile reel overflow fix ── */
+    @media (max-width: 480px) {
+      .reel-item { font-size: 7.5px; padding: 0 4px; letter-spacing: 0.02em; }
+      .slot-window { height: 80px; }
+      .reel-item { height: 80px; }
+    }
+
+    /* ── Print styles ── */
+    @media print {
+      body { background: white; color: #0f172a; }
+      .no-print { display: none !important; }
+      .glass, .amber-ring { background: white; border: 1px solid #e2e8f0; box-shadow: none; backdrop-filter: none; }
+      .brand-text { -webkit-text-fill-color: #8B6914; filter: none; font-family: serif; }
+      .section-label { color: #64748b; }
+      #result-card { display: block !important; }
+      #loader, header .flex, #feed-col { display: none !important; }
+      .slot-section { display: none !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+<!-- ── Toast ── -->
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ══════════════════════════════════
+     SIGN IN MODAL
+══════════════════════════════════ -->
+<div id="signin-modal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="signin-title">
+  <div class="glass amber-ring rounded-[2rem] p-8 w-full max-w-md shadow-2xl text-center">
+    <div style="font-size:32px;margin-bottom:1rem;">✦</div>
+    <h2 id="signin-title" class="text-xl font-black text-white mb-2">Sign in to GEM N EYE</h2>
+    <p class="text-slate-400 text-sm leading-relaxed mb-6">Enter your email and we'll send you a magic link — no password needed. Your credits and purchases are saved to your account.</p>
+    <div class="space-y-3" id="signin-email-form">
+      <input type="email" id="signin-email-input" class="field text-center" placeholder="you@email.com" autocomplete="email">
+      <button id="signin-send-btn" class="spin-btn w-full">✦ &nbsp;Send Magic Link</button>
+      <p id="signin-error" class="text-xs text-red-400 hidden"></p>
+    </div>
+    <div id="signin-sent-msg" class="hidden">
+      <p style="color:#10b981;font-size:1rem;font-weight:800;margin-bottom:0.5rem;">✓ Check your inbox</p>
+      <p class="text-slate-400 text-sm">We sent a sign-in link to <strong id="signin-sent-email" style="color:#D4AF37;"></strong>.<br>Click the link in your email to continue.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAYWALL MODAL
+══════════════════════════════════ -->
+<div id="paywall-modal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="paywall-title">
+  <div class="glass amber-ring rounded-[2rem] p-8 w-full max-w-md shadow-2xl text-center">
+    <div style="width:52px;height:52px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.15),rgba(212,175,55,0.03));border:1px solid rgba(212,175,55,0.35);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:22px;">🔒</div>
+    <div class="casino-rule mb-3" style="font-size:8px;letter-spacing:0.3em;">Free Limit Reached</div>
+    <h3 id="paywall-title" style="font-family:'Cinzel Decorative',serif;font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,#F5D76A,#D4AF37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem;">You've used your 5 free spins</h3>
+    <p style="color:rgba(237,230,208,0.5);font-size:0.8125rem;line-height:1.65;margin-bottom:1.75rem;">Get <strong style="color:#D4AF37;">50 more blueprint generations</strong> — all 47 Google &amp; Gemini tools, every mode, unlimited niches.</p>
+    <div style="background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(212,175,55,0.03));border:1px solid rgba(212,175,55,0.18);border-radius:1rem;padding:1rem 1.25rem;margin-bottom:1.5rem;">
+      <p style="font-size:2rem;font-weight:900;color:#D4AF37;line-height:1;margin-bottom:2px;">$9</p>
+      <p style="font-size:0.7rem;font-weight:700;color:rgba(212,175,55,0.45);text-transform:uppercase;letter-spacing:0.1em;">50 generations · one-time</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <a id="paywall-stripe-btn" href="#" target="_blank" rel="noopener" class="spin-btn" style="text-decoration:none;display:block;">✦ &nbsp;Get 50 Generations — $9</a>
+      <p style="font-size:0.7rem;color:rgba(212,175,55,0.25);font-weight:600;">After paying, Stripe will return you here automatically.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     BLUEPRINT GATE MODAL
+══════════════════════════════════ -->
+<div id="bp-gate-modal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="bp-gate-title">
+  <div class="glass amber-ring rounded-[2rem] p-8 w-full max-w-md shadow-2xl text-center">
+    <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(212,175,55,0.18),rgba(212,175,55,0.04));border:1px solid rgba(212,175,55,0.35);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:22px;">📋</div>
+    <div class="casino-rule mb-3" style="font-size:8px;letter-spacing:0.3em;">Full Implementation Blueprint</div>
+    <h3 id="bp-gate-title" style="font-family:'Cinzel Decorative',serif;font-size:1rem;font-weight:700;background:linear-gradient(135deg,#F5D76A,#D4AF37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.75rem;line-height:1.4;">Your Deep-Dive Strategy Doc</h3>
+    <p style="color:rgba(237,230,208,0.5);font-size:0.8125rem;line-height:1.7;margin-bottom:1.5rem;">14 sections built specifically for your tool combo — competitive landscape, positioning statement, 12-week roadmap, ad copy for 3 platforms, tool configs, and KPIs.</p>
+    <div style="background:linear-gradient(135deg,rgba(212,175,55,0.07),rgba(212,175,55,0.02));border:1px solid rgba(212,175,55,0.15);border-radius:1rem;padding:1rem 1.25rem;margin-bottom:1.5rem;text-align:left;">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.18);color:rgba(212,175,55,0.7);">Competitive Landscape</span>
+        <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.18);color:rgba(212,175,55,0.7);">12-Week Roadmap</span>
+        <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.18);color:rgba(212,175,55,0.7);">Ad Copy × 3</span>
+        <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.18);color:rgba(212,175,55,0.7);">White Space Analysis</span>
+        <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.18);color:rgba(212,175,55,0.7);">Revenue Model</span>
+        <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.18);color:rgba(212,175,55,0.7);">Tool Config Guide</span>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(212,175,55,0.03));border:1px solid rgba(212,175,55,0.2);border-radius:1rem;padding:0.875rem 1.25rem;margin-bottom:1.5rem;">
+      <p style="font-size:2rem;font-weight:900;color:#D4AF37;line-height:1;margin-bottom:2px;">$19</p>
+      <p style="font-size:0.7rem;font-weight:700;color:rgba(212,175,55,0.45);text-transform:uppercase;letter-spacing:0.1em;">one-time · save as PDF</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <a id="bp-gate-stripe-btn" href="#" target="_blank" rel="noopener" class="spin-btn" style="text-decoration:none;display:block;">✦ &nbsp;Get Full Blueprint — $19</a>
+      <button onclick="document.getElementById('bp-gate-modal').classList.remove('open')" style="font-family:inherit;width:100%;padding:10px;color:rgba(212,175,55,0.3);font-size:0.75rem;font-weight:700;background:transparent;border:none;cursor:pointer;">Maybe later</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MODE GUIDE MODAL
+══════════════════════════════════ -->
+<div id="mode-guide-modal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="mode-guide-title" style="align-items:flex-start;padding-top:40px;">
+  <div class="glass amber-ring rounded-[2rem] w-full shadow-2xl" style="max-width:680px;max-height:85vh;overflow-y:auto;">
+
+    <!-- Header -->
+    <div style="padding:2rem 2rem 1rem;border-bottom:1px solid rgba(212,175,55,0.12);">
+      <div class="casino-rule mb-3" style="font-size:8px;letter-spacing:0.3em;">Mode Guide</div>
+      <h2 id="mode-guide-title" style="font-family:'Cinzel Decorative',serif;font-size:1.25rem;font-weight:700;background:linear-gradient(135deg,#F5D76A,#D4AF37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">How Each Mode Works</h2>
+      <p style="color:rgba(212,175,55,0.45);font-size:0.75rem;margin-top:6px;">Each mode shapes how blueprints are written — pick the one that matches your goal.</p>
+    </div>
+
+    <!-- Mode cards -->
+    <div style="padding:1.5rem 2rem;display:flex;flex-direction:column;gap:1rem;">
+
+      <!-- Easy Start -->
+      <div style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:1.25rem;padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 10px rgba(16,185,129,0.7);flex-shrink:0;display:inline-block;"></span>
+          <span style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.12em;color:#10b981;">Easy Start</span>
+          <span style="font-size:9px;font-weight:700;color:rgba(16,185,129,0.5);margin-left:auto;">Best if you're new to AI tools</span>
+        </div>
+        <p style="color:#ede6d0;font-size:0.875rem;font-weight:600;margin-bottom:0.5rem;">Plain English. No jargon. No code. No experience required.</p>
+        <p style="color:rgba(237,230,208,0.6);font-size:0.8125rem;line-height:1.65;margin-bottom:0.75rem;">Every spin gives you a simple 5-step plan written like a to-do list anyone can follow. You'll see exactly how to use each jackpot tool to make money — explained so clearly that someone who has never used AI before can start the same day.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#10b981;">Simple language</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#10b981;">No-code steps</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#10b981;">Relatable examples</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#10b981;">2–4 week income target</span>
+        </div>
+      </div>
+
+      <!-- Creator -->
+      <div style="background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.18);border-radius:1.25rem;padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold-glow);flex-shrink:0;display:inline-block;"></span>
+          <span style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);">Creator</span>
+          <span style="font-size:9px;font-weight:700;color:rgba(212,175,55,0.45);margin-left:auto;">YouTubers · Podcasters · Newsletters</span>
+        </div>
+        <p style="color:#ede6d0;font-size:0.875rem;font-weight:600;margin-bottom:0.5rem;">Tool-specific blueprints built for content creators who monetize an audience.</p>
+        <p style="color:rgba(237,230,208,0.6);font-size:0.8125rem;line-height:1.65;margin-bottom:0.75rem;">Each blueprint shows you how to use the exact jackpot tools for content production, audience growth, and monetization — ad revenue, sponsorships, and digital product sales. Steps are written from the angle of a content creator: what to make, how to distribute it, and how to get paid.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.22);color:var(--gold);">Content pipeline</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.22);color:var(--gold);">Ad revenue + sponsorships</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.22);color:var(--gold);">Digital products</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.22);color:var(--gold);">Audience growth</span>
+        </div>
+      </div>
+
+      <!-- Entrepreneur -->
+      <div style="background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.18);border-radius:1.25rem;padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold-glow);flex-shrink:0;display:inline-block;"></span>
+          <span style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);">Entrepreneur</span>
+          <span style="font-size:9px;font-weight:700;color:rgba(212,175,55,0.45);margin-left:auto;">Coaches · Agencies · Local Biz · Freelancers</span>
+        </div>
+        <p style="color:#ede6d0;font-size:0.875rem;font-weight:600;margin-bottom:0.5rem;">Revenue-focused blueprints for business owners and service providers.</p>
+        <p style="color:rgba(237,230,208,0.6);font-size:0.8125rem;line-height:1.65;margin-bottom:0.75rem;">Blueprints show how to use the jackpot tools to land clients, automate services, and build recurring income — retainers, subscriptions, and service fees. Written from an entrepreneur's angle: how to position your offer, close customers, and scale without adding headcount.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.22);color:var(--gold);">Client retainers</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.22);color:var(--gold);">Service automation</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.22);color:var(--gold);">Subscriptions</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.22);color:var(--gold);">Scale without hiring</span>
+        </div>
+      </div>
+
+      <!-- Developer -->
+      <div style="background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.2);border-radius:1.25rem;padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#a78bfa;box-shadow:0 0 10px rgba(167,139,250,0.6);flex-shrink:0;display:inline-block;"></span>
+          <span style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.12em;color:#a78bfa;">Developer</span>
+          <span style="font-size:9px;font-weight:700;color:rgba(167,139,250,0.45);margin-left:auto;">Builders · SaaS founders · Freelance devs</span>
+        </div>
+        <p style="color:#ede6d0;font-size:0.875rem;font-weight:600;margin-bottom:0.5rem;">Technical blueprints for people who build things with code.</p>
+        <p style="color:rgba(237,230,208,0.6);font-size:0.8125rem;line-height:1.65;margin-bottom:0.75rem;">Each step names the real feature, API, or SDK inside the jackpot tool and tells you exactly what to configure, deploy, or integrate. Income model is SaaS subscriptions, API usage fees, and consulting — written for someone comfortable with code who wants to ship a product fast.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);color:#a78bfa;">API + SDK steps</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);color:#a78bfa;">SaaS revenue model</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);color:#a78bfa;">Deploy-ready</span>
+          <span style="font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);color:#a78bfa;">Technical deep-dive</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer close -->
+    <div style="padding:1rem 2rem 1.5rem;text-align:center;border-top:1px solid rgba(212,175,55,0.08);">
+      <button onclick="document.getElementById('mode-guide-modal').classList.remove('open')"
+        class="spin-btn" style="padding:12px 40px;font-size:11px;">
+        Got it — Let's Spin
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     FULL BLUEPRINT MODAL
+══════════════════════════════════ -->
+<div id="full-bp-modal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="full-bp-title" style="align-items:flex-start;padding-top:32px;">
+  <div class="glass amber-ring rounded-[2rem] w-full shadow-2xl" style="max-width:780px;max-height:90vh;overflow-y:auto;">
+
+    <!-- Loading state -->
+    <div id="full-bp-loader" style="padding:5rem 2rem;text-align:center;">
+      <div style="width:52px;height:52px;border:3px solid rgba(212,175,55,0.12);border-top-color:#D4AF37;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1.5rem;"></div>
+      <p style="font-family:'Cinzel Decorative',serif;color:#D4AF37;font-size:0.875rem;font-weight:700;letter-spacing:0.12em;">BUILDING YOUR FULL BLUEPRINT</p>
+      <p style="color:rgba(212,175,55,0.35);font-size:0.75rem;margin-top:8px;">90-day roadmap · ad copy · tool configs · KPIs</p>
+    </div>
+
+    <!-- Content (shown after load) -->
+    <div id="full-bp-content" style="display:none;">
+
+      <!-- Header -->
+      <div style="padding:2rem 2rem 1.25rem;border-bottom:1px solid rgba(212,175,55,0.12);">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+          <div>
+            <div class="casino-rule mb-2" style="font-size:8px;letter-spacing:0.3em;">Full Implementation Blueprint</div>
+            <h2 id="full-bp-title" style="font-family:'Cinzel Decorative',serif;font-size:1rem;font-weight:700;background:linear-gradient(135deg,#F5D76A,#D4AF37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.4;"></h2>
+            <p id="full-bp-tools-label" style="color:rgba(212,175,55,0.45);font-size:0.7rem;margin-top:5px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;"></p>
+          </div>
+          <button onclick="document.getElementById('full-bp-modal').classList.remove('open')"
+            style="min-width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(237,230,208,0.5);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:inherit;" aria-label="Close">✕</button>
+        </div>
+      </div>
+
+      <!-- Sections injected by JS -->
+      <div id="full-bp-body" style="padding:1.5rem 2rem;display:flex;flex-direction:column;gap:1.25rem;"></div>
+
+      <!-- Footer CTA -->
+      <div style="padding:1.25rem 2rem 1.75rem;border-top:1px solid rgba(212,175,55,0.12);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;">
+        <p style="color:rgba(212,175,55,0.35);font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Save your full blueprint</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button onclick="window.print();" style="font-size:0.8rem;font-weight:900;padding:10px 20px;border-radius:10px;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.22);color:#D4AF37;cursor:pointer;white-space:nowrap;font-family:inherit;">⬇ Save as PDF</button>
+          <a id="full-bp-buy-btn" href="#" target="_blank" rel="noopener"
+            style="font-size:0.8rem;font-weight:900;padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,#D4AF37 0%,#A8860A 60%,#D4AF37 100%);color:#08070e;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 20px rgba(212,175,55,0.3);">✦ Purchase — $19</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MAIN LAYOUT
+══════════════════════════════════ -->
+<div class="max-w-6xl mx-auto px-4 py-8 md:py-12">
+
+  <!-- Header -->
+  <header class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 no-print">
+    <div>
+      <img src="./gem-n-eye-logo.png" alt="GEM N EYE" style="height:88px;width:auto;max-width:380px;display:block;object-fit:contain;" onerror="this.style.display='none';document.getElementById('gne-text-logo').style.display='block';">
+      <div id="gne-text-logo" style="display:none;">
+        <h1 class="text-4xl md:text-5xl font-black brand-text tracking-wide">GEM N EYE</h1>
+        <div class="casino-rule mt-1.5 mb-0" style="max-width:320px">♦</div>
+      </div>
+      <p style="color:rgba(212,175,55,0.4);font-size:9px;font-weight:900;letter-spacing:0.32em;text-transform:uppercase;margin-top:6px">AI Monetization Blueprint Engine</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <!-- User account / sign in -->
+      <div id="auth-signed-out" class="flex items-center gap-2">
+        <button onclick="openSignInModal()"
+          class="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-colors cursor-pointer text-xs font-bold"
+          style="border:1px solid rgba(212,175,55,0.22);background:rgba(212,175,55,0.06);color:rgba(212,175,55,0.7);">
+          ✦ &nbsp;Sign In
+        </button>
+      </div>
+      <div id="auth-signed-in" class="hidden flex items-center gap-2">
+        <div class="flex items-center gap-2 px-3 py-2 rounded-xl" style="border:1px solid rgba(212,175,55,0.12);background:rgba(212,175,55,0.04);">
+          <span class="status-dot" style="background:#10b981;box-shadow:0 0 6px rgba(16,185,129,0.6);"></span>
+          <span id="user-email-label" class="text-[10px] font-black uppercase tracking-wider" style="color:rgba(212,175,55,0.6);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+        </div>
+        <button onclick="signOut()" class="text-[10px] font-black uppercase tracking-wider px-3 py-2 rounded-xl cursor-pointer" style="border:1px solid rgba(255,255,255,0.06);background:transparent;color:rgba(237,230,208,0.25);">Out</button>
+      </div>
+      <!-- Spin counter -->
+      <div id="spin-counter-wrap" class="flex items-center gap-2 px-4 py-2.5 rounded-xl cursor-pointer" style="border:1px solid rgba(212,175,55,0.12);background:rgba(212,175,55,0.04);display:none;" onclick="showPaywallIfNeeded(true)">
+        <span style="font-size:14px;">✦</span>
+        <span id="spin-counter-label" class="text-[10px] font-black uppercase tracking-wider" style="color:rgba(212,175,55,0.6);">5 free left</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- ── SLOT MACHINE COLUMN ── -->
+    <div class="lg:col-span-8 space-y-5">
+
+      <!-- Hero line -->
+      <p class="text-center no-print" style="color:rgba(212,175,55,0.5);font-size:0.8125rem;font-weight:600;letter-spacing:0.02em;margin-bottom:-4px;">Spin 3 Google AI tools, get an instant monetization blueprint — then upgrade for the full 90-day strategy.</p>
+
+      <!-- Machine card -->
+      <div class="glass amber-ring rounded-[2rem] p-6 md:p-8 slot-section no-print" style="position:relative;overflow:hidden;">
+        <!-- Gold top strip -->
+        <div class="casino-top-strip"></div>
+
+        <!-- Controls -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+          <!-- Niche -->
+          <div>
+            <label for="niche-select" class="block text-center section-label mb-3" style="color:rgba(212,175,55,0.65);">
+              Niche
+            </label>
+            <select id="niche-select" class="field">
+              <option value="General Business">General Business</option>
+              <option value="Real Estate">Real Estate</option>
+              <option value="E-commerce">E-commerce</option>
+              <option value="Health &amp; Wellness">Health &amp; Wellness</option>
+              <option value="Web3 / Crypto">Web3 / Crypto</option>
+              <option value="SaaS">SaaS</option>
+              <option value="Education">Education</option>
+              <option value="Custom...">Custom...</option>
+            </select>
+            <input type="text" id="custom-niche" placeholder="Describe your niche..." class="field mt-2 hidden" aria-label="Custom niche description">
+          </div>
+
+          <!-- Tool override -->
+          <div>
+            <label for="tool-override" class="block text-center section-label mb-3" style="color:rgba(212,175,55,0.65);">Lock one tool into every spin</label>
+            <input type="text" id="tool-override" class="field text-center" placeholder="e.g. NotebookLM" aria-describedby="tool-override-hint">
+            <p id="tool-override-hint" class="text-[9px] mt-1.5 text-center font-bold uppercase" style="color:rgba(212,175,55,0.3);">Leave blank to let all 3 spin freely</p>
+          </div>
+        </div>
+
+        <!-- ── Mode Bar ── -->
+        <div class="mb-6">
+          <div class="mode-bar" role="radiogroup" aria-label="Output style">
+            <button class="mode-btn active-easy" id="mode-easy" role="radio" aria-checked="true">
+              <span class="mode-dot-easy"></span>
+              Easy Start
+            </button>
+            <button class="mode-btn" id="mode-creator" role="radio" aria-checked="false" data-role="Creator">
+              <span class="mode-dot-adv" style="display:none"></span>
+              Creator
+            </button>
+            <button class="mode-btn" id="mode-biz" role="radio" aria-checked="false" data-role="Entrepreneur">
+              <span class="mode-dot-adv" style="display:none"></span>
+              Entrepreneur
+            </button>
+            <button class="mode-btn" id="mode-dev" role="radio" aria-checked="false" data-role="Developer">
+              <span class="mode-dot-adv" style="display:none"></span>
+              Developer
+            </button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+            <p id="mode-hint" class="mode-hint" style="margin-top:0;">Beginner-friendly — plain English steps anyone can follow</p>
+            <button onclick="document.getElementById('mode-guide-modal').classList.add('open')"
+              style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:rgba(212,175,55,0.45);background:none;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;padding:2px 0 2px 12px;transition:color 0.2s;"
+              onmouseover="this.style.color='rgba(212,175,55,0.85)'" onmouseout="this.style.color='rgba(212,175,55,0.45)'"
+              aria-label="Open mode guide">
+              How each mode works →
+            </button>
+          </div>
+        </div>
+
+        <!-- Reels + Lever -->
+        <div class="flex items-center gap-5 md:gap-8">
+          <div class="flex-1 grid grid-cols-3 gap-3">
+            <div class="reel-frame">
+              <p class="reel-frame-label">Tool 1</p>
+              <div class="slot-window" id="slot-1" aria-label="Reel 1"><div class="reel-track" id="reel-1"></div></div>
+            </div>
+            <div class="reel-frame">
+              <p class="reel-frame-label">Tool 2</p>
+              <div class="slot-window" id="slot-2" aria-label="Reel 2"><div class="reel-track" id="reel-2"></div></div>
+            </div>
+            <div class="reel-frame">
+              <p class="reel-frame-label">Tool 3</p>
+              <div class="slot-window" id="slot-3" aria-label="Reel 3"><div class="reel-track" id="reel-3"></div></div>
+            </div>
+          </div>
+          <!-- Lever (desktop only) -->
+          <div class="hidden md:flex flex-col items-center gap-2.5">
+            <div class="lever-base" id="lever" role="button" tabindex="0" aria-label="Pull lever to generate blueprint">
+              <div class="lever-shaft" id="lever-shaft">
+                <div class="lever-knob" aria-hidden="true"></div>
+              </div>
+            </div>
+            <p class="text-[9px] font-black text-amber-500/40 uppercase tracking-widest">Pull</p>
+          </div>
+        </div>
+
+        <!-- Spin button -->
+        <div class="mt-6 flex justify-center">
+          <button id="spin-btn" class="spin-btn" aria-live="polite">
+            <span id="spin-label">✦ &nbsp;Spin for Blueprint</span>
+          </button>
+        </div>
+
+      </div><!-- /machine card -->
+
+      <!-- Loading skeleton -->
+      <div id="loader" class="hidden glass amber-ring rounded-[2rem] p-10" aria-live="polite" aria-label="Generating blueprint">
+        <div class="space-y-4 max-w-sm mx-auto text-center">
+          <div class="skeleton h-5 w-40 mx-auto"></div>
+          <div class="skeleton h-4 w-56 mx-auto"></div>
+          <div class="skeleton h-4 w-48 mx-auto"></div>
+          <div class="skeleton h-4 w-52 mx-auto"></div>
+          <p class="section-label mt-6" style="color:rgba(212,175,55,0.45);">Building your blueprint...</p>
+        </div>
+      </div>
+
+      <!-- Result card -->
+      <div id="result-card" class="hidden glass amber-ring rounded-[2rem] p-6 md:p-8 space-y-6">
+
+        <!-- API error banner (shown only when live API failed and demo was used as fallback) -->
+        <div id="api-error-banner" class="hidden rounded-xl px-4 py-3 flex items-center gap-3" style="background:rgba(224,26,47,0.07);border:1px solid rgba(224,26,47,0.2);">
+          <span style="font-size:16px;flex-shrink:0;">⚠️</span>
+          <p style="font-size:0.75rem;color:rgba(237,230,208,0.65);font-weight:600;line-height:1.5;margin:0;">Blueprint generation failed — showing a demo. Please try spinning again in a moment.</p>
+        </div>
+
+        <!-- Tool pipeline (only shown in tool-specific mode) -->
+        <div id="res-pipeline" class="hidden pipeline-bar mb-2"></div>
+
+        <!-- Header row -->
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap mb-2">
+              <span id="res-niche" class="inline-block bg-amber-500/10 text-amber-400 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border border-amber-500/20"></span>
+              <span id="res-mode-badge" class="inline-block text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border"></span>
+            </div>
+            <h2 id="res-title" class="text-2xl md:text-3xl font-black text-white leading-tight" style="text-shadow:0 0 20px rgba(245,158,11,0.2)"></h2>
+          </div>
+          <div class="flex gap-2 flex-shrink-0">
+            <button id="copy-btn" aria-label="Copy blueprint text to clipboard"
+              class="w-10 h-10 rounded-xl border border-white/08 bg-white/3 hover:bg-white/08 transition-colors flex items-center justify-center cursor-pointer no-print"
+              title="Copy to clipboard">
+              <svg id="copy-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            </button>
+            <button id="print-btn" aria-label="Print blueprint or save as PDF"
+              class="w-10 h-10 rounded-xl border border-white/08 bg-white/3 hover:bg-white/08 transition-colors flex items-center justify-center cursor-pointer no-print"
+              title="Print / Save as PDF">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Vision -->
+        <blockquote id="res-vision" class="text-slate-300 text-base italic font-medium leading-relaxed border-l-2 border-amber-500/35 pl-4"></blockquote>
+
+        <!-- Monetization -->
+        <div style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.18);border-radius:1.5rem;padding:1.25rem;">
+          <p class="section-label mb-3" style="color:var(--gold)">How You Get Paid</p>
+          <p id="res-money" style="color:#ede6d0;font-weight:700;font-size:0.875rem;line-height:1.65;margin-bottom:0.75rem;"></p>
+          <span id="res-roi" style="font-size:0.75rem;font-weight:700;color:rgba(212,175,55,0.75);background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.18);padding:6px 14px;border-radius:8px;display:inline-block;"></span>
+        </div>
+
+        <!-- Real-World Scenario -->
+        <div style="background:rgba(224,26,47,0.04);border:1px solid rgba(224,26,47,0.14);border-radius:1.5rem;padding:1.25rem;">
+          <p class="section-label mb-3" style="color:rgba(220,80,100,0.9)">Real-World Scenario</p>
+          <p id="res-example" style="color:rgba(237,230,208,0.8);font-size:0.875rem;font-style:italic;line-height:1.7;"></p>
+        </div>
+
+        <!-- Steps -->
+        <div>
+          <p class="section-label mb-4" style="color:rgba(212,175,55,0.45)">Step-by-Step Action Plan</p>
+          <div id="res-steps" class="space-y-3"></div>
+        </div>
+
+        <!-- 90-day roadmap -->
+        <div id="res-calendar-wrap" class="hidden rounded-[1.5rem] p-5" style="background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.12);">
+          <p class="section-label mb-3" style="color:rgba(212,175,55,0.4)">90-Day Roadmap</p>
+          <p id="res-calendar" style="color:rgba(237,230,208,0.75);font-size:0.875rem;line-height:1.7;"></p>
+        </div>
+
+        <!-- Blueprint CTA -->
+        <div class="no-print rounded-[1.5rem] p-5 flex flex-col sm:flex-row items-center justify-between gap-4" style="background:linear-gradient(135deg,#D4AF37 0%,#A8860A 50%,#D4AF37 100%);box-shadow:0 0 40px rgba(212,175,55,0.25);">
+          <div>
+            <p style="color:#08070e;font-weight:900;font-size:1rem;line-height:1.3;">Full Implementation Blueprint</p>
+            <p style="color:rgba(8,7,14,0.6);font-size:0.75rem;font-weight:500;margin-top:2px;">90-day calendar, ad copy &amp; tech specs — print or save as PDF</p>
+          </div>
+          <button id="blueprint-cta" style="background:#08070e;color:#D4AF37;font-weight:900;font-size:0.875rem;padding:12px 24px;border-radius:12px;border:1px solid rgba(212,175,55,0.3);cursor:pointer;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.5);transition:background 0.2s;" onmouseover="this.style.background='#130f20'" onmouseout="this.style.background='#08070e'">
+            Get Blueprint — $19
+          </button>
+        </div>
+
+      </div><!-- /result-card -->
+    </div><!-- /left col -->
+
+    <!-- ── FEED COLUMN ── -->
+    <div class="lg:col-span-4 no-print" id="feed-col">
+      <div class="glass amber-ring rounded-[2rem] p-6 sticky top-6" style="max-height:580px;display:flex;flex-direction:column;">
+        <div class="casino-rule mb-4" style="font-size:8px;letter-spacing:0.3em;">Recent Spins</div>
+        <div class="flex items-center justify-end mb-3">
+          <button id="clear-feed" class="text-[9px] font-black uppercase tracking-wider cursor-pointer bg-transparent border-none transition-colors" style="color:rgba(212,175,55,0.25);font-family:inherit" aria-label="Clear recent spins history">Clear</button>
+        </div>
+        <div id="combo-feed" class="flex-1 overflow-y-auto space-y-2.5 pr-1" aria-live="polite" aria-label="Recent spin history">
+          <p style="color:rgba(212,175,55,0.2);font-size:0.75rem;font-style:italic;">Spin to see your combos here...</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+</div><!-- /container -->
+
+<script>
+(function () {
+  'use strict';
+
+  // ── Supabase init ────────────────────────────────
+  const SUPA_URL  = 'https://tbkugallaxhhmpgvzurl.supabase.co';
+  const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRia3VnYWxsYXhoaG1wZ3Z6dXJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3Mjk1NDQsImV4cCI6MjA4NjMwNTU0NH0.btLg4RZ0UtFRQWYS5sJESsvCM12mffT4LWD8xh7eJjY';
+  const _supa = supabase.createClient(SUPA_URL, SUPA_ANON);
+
+  // ── State ──────────────────────────────────────────
+  let supaUser  = null;   // Supabase user object
+  let authToken = null;   // JWT for /api/generate
+  let credits   = 5;      // loaded from Supabase profile; default 5 until loaded
+  let bpUnlocked = false;
+  let spinning  = false;
+  let lastResult = null;
+  let easyStart    = true;   // Easy Start = plain English; false = tool-specific
+  let role         = 'Creator';
+  let niche        = 'General Business';
+  let recentCombos = [];     // tracks last 8 tool combos to prevent repeats
+
+  // ── Stripe payment link ──────────────────────────
+  const STRIPE_LINK         = 'https://buy.stripe.com/00w8wQ19X75B7z4drS3ks00'; // $19 Full Blueprint
+  const STRIPE_CREDITS_LINK = 'https://buy.stripe.com/aFadRa4m975BdXsgE43ks01';  // $9 — 50 generations
+
+  // ── All 47 Google / Gemini tools (everyone gets the full pool) ───
+  const ALL_TOOLS = [
+    // Research & Knowledge
+    'NotebookLM', 'Deep Research', 'AI Mode', 'Gems', 'Learn About',
+    // Creative & Media
+    'Veo 3', 'Flow', 'Whisk', 'Imagen 4', 'Nano Banana 2', 'MusicFX', 'Lyria', 'Mixboard', 'Google Vids', 'TextFX',
+    // Workspace & Productivity
+    'Gemini in Gmail', 'Gemini in Docs', 'Gemini in Sheets', 'Gemini in Slides',
+    'Gemini in Drive', 'Gemini in Meet', 'Workspace Studio', 'Gemini Canvas',
+    // Developer & Data
+    'Firebase Studio', 'Flutter', 'Looker Studio', 'Gemini Code Assist', 'Google AI Studio',
+    // Real-time & Voice
+    'Gemini Live', 'Search Grounding',
+    // Experimental & Frontier
+    'Project Astra', 'Project Mariner', 'Genie 3', 'Deep Think',
+    // Advanced Dev
+    'Vertex AI', 'Vertex Studio', 'Google ADK', 'Google Antigravity', 'Jules', 'Gemini CLI',
+    // Cutting Edge
+    'Gemini Robotics', 'Agent Mode',
+    // Design & Emerging
+    'Stitch', 'Opal', 'Pomelli',
+  ];
+
+  const LINKS = {
+    // Research
+    'NotebookLM':        'https://notebooklm.google.com/',
+    'Deep Research':     'https://gemini.google.com/',
+    'AI Mode':           'https://google.com/',
+    'Gems':              'https://gemini.google.com/',
+    // Creative
+    'Veo 3':             'https://deepmind.google/technologies/veo/',
+    'Flow':              'https://flow.google/',
+    'Whisk':             'https://labs.google/whisk',
+    'Imagen 4':          'https://deepmind.google/technologies/imagen/',
+    'MusicFX':           'https://labs.google/musicfx',
+    'Google Vids':       'https://workspace.google.com/products/vids/',
+    // Workspace
+    'Gemini in Gmail':   'https://workspace.google.com/products/gmail/',
+    'Gemini in Docs':    'https://workspace.google.com/products/docs/',
+    'Gemini in Sheets':  'https://workspace.google.com/products/sheets/',
+    'Gemini in Meet':    'https://workspace.google.com/products/meet/',
+    'Workspace Studio':  'https://workspace.google.com/',
+    'Canvas':            'https://workspace.google.com/',
+    // Developer
+    'Firebase':          'https://firebase.google.com/',
+    'Flutter':           'https://flutter.dev/',
+    'Looker Studio':     'https://lookerstudio.google.com/',
+    'Gemini Code Assist':'https://cloud.google.com/gemini/docs/codeassist/overview',
+    // Voice / Real-time
+    'Gemini Live':       'https://gemini.google.com/',
+    'Search Grounding':  'https://ai.google.dev/gemini-api/docs/grounding',
+    // Pro
+    'Project Astra':     'https://deepmind.google/technologies/project-astra/',
+    'Project Mariner':   'https://deepmind.google/models/project-mariner/',
+    'Genie 3':           'https://deepmind.google/',
+    'Deep Think':        'https://gemini.google.com/',
+    'Vertex AI':         'https://cloud.google.com/vertex-ai',
+    'Vertex Studio':     'https://cloud.google.com/vertex-ai/generative-ai/docs/start/quickstarts/quickstart-multimodal',
+    'Google ADK':        'https://google.github.io/adk-docs/',
+    'Google Antigravity':'https://antigravity.google/',
+    'Jules':             'https://jules.google/',
+    'Gemini Robotics':   'https://deepmind.google/discover/blog/gemini-robotics/',
+    'Agent Mode':        'https://ai.google.dev/gemini-api/docs',
+    'Gemini CLI':        'https://github.com/google-gemini/gemini-cli',
+    'Stitch':            'https://stitch.withgoogle.com/',
+    'Opal':              'https://labs.google/',
+    'Pomelli':           'https://labs.google/',
+    // New Standard
+    'Learn About':       'https://learning.google.com/experiments/learn-about',
+    'Nano Banana 2':     'https://deepmind.google/',
+    'Lyria':             'https://deepmind.google/technologies/lyria/',
+    'Mixboard':          'https://labs.google/musicfx',
+    'TextFX':            'https://textfx.withgoogle.com/',
+    'Gemini in Slides':  'https://workspace.google.com/products/slides/',
+    'Gemini in Drive':   'https://workspace.google.com/products/drive/',
+    'Gemini Canvas':     'https://gemini.google.com/',
+    'Firebase Studio':   'https://firebase.google.com/',
+    'Google AI Studio':  'https://aistudio.google.com/',
+  };
+
+  // ── Easy Start demo builder — plain English, based on actual spun tools ──
+  function buildEasyDemo(tools, n) {
+    const t1 = tools[0], t2 = tools[1], t3 = tools[2] || tools[0];
+
+    // Simple one-liner descriptions any beginner can understand
+    const EASY_DESC = {
+      // Research & Knowledge
+      'NotebookLM':        'turn any document, PDF, or notes into a podcast episode or instant summary',
+      'Deep Research':     'type a question and get a full research report with sources in minutes — like having a PhD assistant',
+      'AI Mode':           'get in-depth AI answers directly in Google Search without clicking through websites',
+      'Gems':              'create your own personal AI expert — a custom chatbot trained on your specific topic',
+      // Creative & Media
+      'Veo 3':             'turn a text description into a real video with sound — no camera or editing needed',
+      'Flow':              'build short films and cinematic content just by describing scenes in plain English',
+      'Whisk':             'drop in a photo and an idea, and AI transforms it into a new image or short video',
+      'Imagen 4':          'generate stunning professional photos, logos, and graphics just by typing what you want',
+      'MusicFX':           'create original background music for your videos and content just by describing the vibe',
+      'Google Vids':       'turn a script or topic into a ready-to-share presentation video in minutes',
+      // Workspace
+      'Gemini in Gmail':   'have AI draft, reply to, and summarize your emails so your inbox runs itself',
+      'Gemini in Docs':    'write, edit, and reformat documents using plain English instructions — no manual formatting',
+      'Gemini in Sheets':  'build spreadsheets, formulas, and data summaries just by describing what you need',
+      'Gemini in Meet':    'get automatic meeting notes, action items, and summaries delivered after every call',
+      'Workspace Studio':  'build your own AI helper inside Google Workspace that automates your daily tasks',
+      'Canvas':            'design beautiful presentations and documents by just describing what you want',
+      // Developer
+      'Firebase':          'launch a simple app or website with logins and a database — no coding experience needed',
+      'Flutter':           'build a mobile app that works on both iPhone and Android without learning two languages',
+      'Looker Studio':     'turn your data and numbers into a beautiful shareable dashboard clients will love',
+      'Gemini Code Assist':'describe a feature in plain English and let AI write and explain the code for you',
+      // Voice / Real-time
+      'Gemini Live':       'have a real back-and-forth voice conversation with AI that can see what your camera sees',
+      'Search Grounding':  'connect your AI tool to live Google Search so it always gives up-to-date answers',
+      // New Standard
+      'Learn About':       'ask any question and get a deep, interactive lesson — like having a tutor on any subject 24/7',
+      'Nano Banana 2':     'generate sharp, high-quality product images and thumbnails just by typing what you want',
+      'Lyria':             'create full AI-composed music tracks for your videos, podcasts, and brand — royalty-free',
+      'Mixboard':          'remix and layer AI-generated music sounds into custom tracks that fit your exact vibe',
+      'TextFX':            'use AI writing tricks to instantly sharpen your captions, headlines, and marketing copy',
+      'Gemini in Slides':  'have AI build your entire presentation with slides and talking points from just a topic',
+      'Gemini in Drive':   'search, summarize, and organize all your Google Drive files using plain English commands',
+      'Gemini Canvas':     'build interactive documents and visual reports in Gemini just by describing what you need',
+      'Firebase Studio':   'build and launch a full web app with a database and hosting — AI writes the code for you',
+      'Google AI Studio':  'test and fine-tune AI models in a free playground — no setup, just start building immediately',
+      // Pro
+      'Project Astra':     'point your phone at anything and ask AI questions about what it sees in real time',
+      'Project Mariner':   'let AI browse the web and complete online tasks for you while you focus on other things',
+      'Genie 3':           'describe a game or interactive world in text and watch AI build it instantly',
+      'Deep Think':        'get AI to think deeply through hard problems step by step before giving you an answer',
+      'Vertex AI':         'host your AI model online so customers can use it and you can charge for access',
+      'Vertex Studio':     'train AI to talk and behave exactly like your brand using your own content',
+      'Google ADK':        'build a team of AI helpers that work together to automate complex business tasks',
+      'Google Antigravity':'describe what you want to build and let AI plan, code, and deploy it for you',
+      'Jules':             'assign coding tasks to AI like you would an employee — it works on them while you sleep',
+      'Gemini Robotics':   'control physical robots and real-world devices using simple AI voice commands',
+      'Agent Mode':        'set up an AI agent that runs on autopilot — browsing, researching, and acting for you',
+      // New Pro
+      'Gemini CLI':        'run Gemini AI directly from your terminal — automate files, scripts, and tasks with a quick command',
+      'Stitch':            'describe a mobile or web screen and let AI generate the full UI design and code instantly',
+      'Opal':              'use this experimental Google AI tool to prototype and test advanced AI features before anyone else',
+      'Pomelli':           'access cutting-edge Google AI experiments and early-access tools for creative and business projects',
+    };
+    const easy = (t) => EASY_DESC[t] || `use ${t} to automate and simplify your ${n} work`;
+
+    const NICHES = {
+      'General Business': 'side hustle', 'Real Estate': 'real estate business',
+      'E-commerce': 'online store', 'Health & Wellness': 'wellness brand',
+      'Web3 / Crypto': 'crypto project', 'SaaS': 'software product',
+      'Education': 'online course', 'General': 'side hustle',
+    };
+    const nicheLabel = NICHES[n] || n.toLowerCase();
+
+    // Relatable business scenarios per niche
+    const SCENARIOS = {
+      'General Business': ['a clothing boutique', 'a hair salon', 'a food truck', 'a local cleaning service'],
+      'Real Estate':       ['a real estate agency', 'a property management company', 'a vacation rental business', 'a house-flipping operation'],
+      'E-commerce':        ['an online clothing store', 'a handmade jewelry shop', 'a print-on-demand store', 'a dropshipping business'],
+      'Health & Wellness': ['a personal training business', 'a nutrition coaching practice', 'a yoga studio', 'a wellness brand'],
+      'Web3 / Crypto':     ['a crypto education channel', 'an NFT art brand', 'a Web3 community', 'a DeFi consulting service'],
+      'SaaS':              ['a small software product', 'a subscription tool for freelancers', 'a no-code app', 'a niche automation service'],
+      'Education':         ['an online course business', 'a tutoring service', 'a skills workshop brand', 'a membership learning community'],
+      'General':           ['a clothing boutique', 'a local service business', 'a coaching practice', 'a creative agency'],
+    };
+    const scenarios = SCENARIOS[n] || SCENARIOS['General'];
+    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+
+    return {
+      vision: `Use ${t1}, ${t2}, and ${t3} to run a ${nicheLabel} that makes money around the clock — no experience, no team, no special skills required.`,
+      monetization: `You use ${t1} to ${easy(t1)}. Then ${t2} helps you ${easy(t2)}. Put them together and you have a product or service people will pay for. Money comes in through digital sales, subscriptions, or client work — all automated.`,
+      roi: `First income possible in 2–4 weeks. Scale to $1K–5K/month within 90 days`,
+      use_case: `If you have ${scenario}, here's how this works: Use ${t1} to ${easy(t1)}. Then use ${t2} to ${easy(t2)}. Add ${t3} to ${easy(t3)} — and suddenly your whole operation is running on autopilot while you stay focused on customers.`,
+      steps: [
+        { desc: `Sign up for ${t1} for free. Spend 30 minutes learning how to ${easy(t1)}. Watch one YouTube tutorial — that's all you need to start.`, tool_link_ref: t1 },
+        { desc: `Use ${t1} to create your first piece of content or product. Don't overthink it — just make something and get feedback from 3 friends.`, tool_link_ref: t1 },
+        { desc: `Add ${t2} to your workflow: ${easy(t2)}. This is what turns your content into something you can sell.`, tool_link_ref: t2 },
+        { desc: `Post what you made in 2–3 Facebook groups, Reddit communities, or on LinkedIn. Offer it for free first to get feedback, then charge $27–97 for the full version.`, tool_link_ref: null },
+        { desc: `Once you have 5 happy customers, use ${t3} to ${easy(t3)} — this automates your delivery so you're not doing everything by hand.`, tool_link_ref: t3 },
+      ],
+      calendar_summary: `Month 1: Learn ${t1} and ${t2}, build your first product, and get 3–5 free beta users. Month 2: Charge for it, aim for 10 paying customers, use ${t3} to automate delivery. Month 3: Focus on getting reviews and referrals — that's how you hit $1K–5K/month without ads.`,
+    };
+  }
+
+  // ── Tool-specific demo builder (for non-easy-start demo mode) ──
+  function buildToolDemo(r, tools, n) {
+    const roleCtx = {
+      Creator:      { angle: 'content creator', income: 'ad revenue, sponsorships, and digital products', cta: 'grow your audience' },
+      Entrepreneur: { angle: 'business owner', income: 'client retainers, subscriptions, and service fees', cta: 'scale your operation' },
+      Developer:    { angle: 'technical builder', income: 'SaaS subscriptions, API usage fees, and consulting', cta: 'ship a product' },
+    };
+    const ctx = roleCtx[r] || roleCtx.Creator;
+    const t1 = tools[0], t2 = tools[1], t3 = tools[2] || tools[0];
+
+    const TOOL_DESC = {
+      // Research & Knowledge
+      'NotebookLM':        'upload your source documents and use the Audio Overview feature to auto-generate podcast-style briefings, then share via the public link',
+      'Deep Research':     'run a multi-step research loop on any topic — it queries hundreds of sources, synthesizes findings, and exports a full cited report',
+      'AI Mode':           'enable AI Mode in Google Search to surface deep, multi-step answers that convert high-intent queries into traffic and leads for your product',
+      'Gems':              'build a custom Gem with a detailed system prompt and uploaded knowledge base — package it as a paid AI tool for your niche audience',
+      // Creative & Media
+      'Veo 3':             'use the cinematic text-to-video interface to generate footage with native audio — set aspect ratio, camera motion, and style in the prompt',
+      'Flow':              'use the scene-builder to define characters, environments, and sequences — stitch clips into a short film using the timeline editor',
+      'Whisk':             'drop in subject and style reference images, generate variations using Imagen 4, then animate the best result into video using Veo',
+      'Imagen 4':          'enter a detailed prompt in the Imagen console, set aspect ratio and output resolution, and batch-generate assets for your content pipeline',
+      'MusicFX':           'describe tempo, instruments, and mood to generate royalty-free background tracks — export stems for use in video and podcast production',
+      'Google Vids':       'paste a script or topic into Vids, let AI generate a storyboard and voiceover, then export as an MP4 for YouTube or social distribution',
+      // Workspace
+      'Gemini in Gmail':   'set up Smart Reply templates, activate the AI compose feature for outbound sales sequences, and use summarization for high-volume inbox management',
+      'Gemini in Docs':    'use the Help Me Write panel to generate full documents from a brief, then iterate with inline prompts to refine tone, length, and structure',
+      'Gemini in Sheets':  'use the side panel to generate formulas, clean data with natural language, and build automated reporting pipelines from raw spreadsheet data',
+      'Gemini in Meet':    'enable the Take Notes for Me feature to auto-generate structured meeting notes, then pipe them into Docs for client deliverables',
+      'Workspace Studio':  'build a no-code AI agent in Workspace Studio that monitors Gmail, updates Sheets, and sends Docs reports on an automated schedule',
+      'Canvas':            'use the Slide generation prompt to build full pitch decks in seconds, then use the Brand Kit to lock in colors, fonts, and logo placement',
+      // Developer
+      'Firebase':          'configure Firestore collections for your data model, set up Firebase Auth with OAuth providers, and deploy Cloud Functions for serverless logic',
+      'Flutter':           'use the Flutter widget catalog to build a cross-platform UI, integrate Firebase for backend, and ship to iOS and Android from one Dart codebase',
+      'Looker Studio':     'connect your data source via the built-in connector library, drag KPI scorecards and trend charts onto the canvas, and publish a shareable URL',
+      'Gemini Code Assist':'use the IDE extension to generate entire feature branches, run inline explain-this-code, and auto-generate unit tests from natural language specs',
+      // Voice / Real-time
+      'Gemini Live':       'use the Gemini Live API with streaming input to build a real-time voice interface — enable camera context for multimodal product walkthroughs',
+      'Search Grounding':  'add the grounding parameter to your Gemini API request to inject live Google Search results into model responses for real-time accuracy',
+      // New Standard
+      'Learn About':       'use the interactive question-answer interface to build curriculum-style learning paths — package them into a paid course or coaching program',
+      'Nano Banana 2':     'batch-generate product mockups, thumbnails, and social graphics via the Imagen API — set style presets and aspect ratios for consistent brand output',
+      'Lyria':             'use the Lyria API to generate adaptive music tracks synced to video timestamps — license the output for commercial use in your content pipeline',
+      'Mixboard':          'layer AI-generated stems and loops in the Mixboard interface, export multi-track sessions, and use them as exclusive brand audio assets',
+      'TextFX':            'run your copywriting through TextFX tools (Explode, Alliteration, Acronym, etc.) to generate hooks, taglines, and ad variants at scale',
+      'Gemini in Slides':  'use the AI generation panel to build full slide decks from a topic brief, then apply brand themes and speaker notes in one pass',
+      'Gemini in Drive':   'use the Drive AI panel to search across all files with natural language, auto-summarize documents, and organize folders by content type',
+      'Gemini Canvas':     'use the Canvas interface to build structured, interactive documents with live AI editing — ideal for proposals, SOPs, and client deliverables',
+      'Firebase Studio':   'use Firebase Studio to define your app requirements in natural language — it scaffolds full-stack code, configures Firestore, and deploys via App Hosting',
+      'Google AI Studio':  'prototype prompts in AI Studio, test model variants side-by-side, then export a production-ready API integration with one click',
+      // Pro
+      'Project Astra':     'use the live multimodal API to build camera-powered AI experiences — integrate into mobile apps for real-time object recognition and coaching',
+      'Project Mariner':   'assign browser-based tasks to Mariner via the API — let it fill forms, extract data, and complete multi-step web workflows on your behalf',
+      'Genie 3':           'use the world-generation API to create interactive 3D environments from text prompts — embed them in apps as gamified onboarding or demos',
+      'Deep Think':        'route your hardest reasoning tasks through the Deep Think model — use it for technical problem-solving, legal analysis, or complex strategy work',
+      'Vertex AI':         'deploy a Gemini endpoint in Vertex AI Studio, configure autoscaling and IAM permissions, and integrate via the REST or Python SDK',
+      'Vertex Studio':     'use the fine-tuning pipeline to train a custom Gemini model on your proprietary data, then deploy it as a private API with per-user rate limiting',
+      'Google ADK':        'define agent roles and tool configs in the ADK framework, orchestrate multi-agent pipelines, and deploy as a managed agent service on Google Cloud',
+      'Google Antigravity':'describe your app in natural language inside the Antigravity IDE — it plans the architecture, writes the code, and deploys to Cloud Run automatically',
+      'Jules':             'connect Jules to your GitHub repo, assign tasks via issue descriptions, and let it open pull requests with working code while you review async',
+      'Gemini Robotics':   'connect the Gemini Robotics API to your robot hardware, define manipulation tasks in natural language, and run closed-loop control via the SDK',
+      'Agent Mode':        'write a system prompt for your agent, connect it to tools via function calling, and deploy it on a schedule to autonomously complete recurring workflows',
+      // New Pro
+      'Gemini CLI':        'install via npm, authenticate with your Google account, and run gemini -p "task description" to automate file processing, code generation, and batch workflows from the terminal',
+      'Stitch':            'write a UI prompt in the Stitch interface describing your screen requirements — it generates production-ready React or HTML/CSS code you can deploy directly',
+      'Opal':              'access the Opal Labs API to integrate experimental Google AI capabilities — use it for rapid prototyping of features not yet in the main Gemini product',
+      'Pomelli':           'use Pomelli early-access interface to test the newest Google multimodal and agentic features — ideal for competitive advantage before general availability',
+    };
+    const desc = (t) => TOOL_DESC[t] || `use ${t}'s core features to automate and accelerate your ${n} workflow`;
+
+    // Relatable scenarios per role
+    const ROLE_SCENARIOS = {
+      Creator:      ['a YouTube channel', 'an Instagram content brand', 'a podcast', 'a newsletter'],
+      Entrepreneur: ['a coaching business', 'a local service agency', 'an e-commerce brand', 'a consulting practice'],
+      Developer:    ['a SaaS product', 'a client project', 'a developer tool', 'an API service'],
+    };
+    const rscenarios = ROLE_SCENARIOS[r] || ROLE_SCENARIOS['Creator'];
+    const rscenario = rscenarios[Math.floor(Math.random() * rscenarios.length)];
+
+    return {
+      vision: `A ${ctx.angle} combines ${t1}, ${t2}, and ${t3} to build a fully automated ${n} income stream generating ${ctx.income}.`,
+      monetization: `${t1} handles the content or product creation layer. ${t2} drives distribution or data intelligence. ${t3} closes the loop with automation or delivery — together they create a recurring revenue engine that runs with minimal daily input.`,
+      roi: `Estimated 400–900% ROI in 60–90 days once the pipeline is live`,
+      use_case: `If you have ${rscenario} in the ${n} space, here's how this plays out: ${t1} handles ${desc(t1).split('—')[0].trim()}. You feed that into ${t2} to ${desc(t2).split('—')[0].trim()}. Then ${t3} closes the loop — ${desc(t3).split('—')[0].trim()}. The pipeline runs on its own once it's set up.`,
+      steps: [
+        { desc: `${t1.toUpperCase()}: ${desc(t1)}. This is your production layer — set it up first and define your output format.`, tool_link_ref: t1 },
+        { desc: `${t2.toUpperCase()}: ${desc(t2)}. Connect the output of ${t1} into ${t2} so each piece of content or data flows automatically.`, tool_link_ref: t2 },
+        { desc: `${t3.toUpperCase()}: ${desc(t3)}. This is the monetization or delivery layer — configure it to ${ctx.cta} at scale.`, tool_link_ref: t3 },
+        { desc: `Test the full ${t1} → ${t2} → ${t3} pipeline end-to-end before launch. Run 3 test cycles and fix any gaps in the hand-off between tools.`, tool_link_ref: null },
+        { desc: `Once stable, publish and promote. Use the data from ${t2 === 'Looker Studio' ? t2 : t3} to track which outputs perform best and double down on those.`, tool_link_ref: null },
+      ],
+      calendar_summary: `Month 1: Set up ${t1} and ${t2}, complete 3 test runs of the pipeline, and validate the output quality. Month 2: Launch publicly, connect ${t3} for automated delivery, and start generating revenue. Month 3: Optimize based on performance data, add one new income stream on top of the pipeline, and scale.`,
+    };
+  }
+
+  // Pre-built demo blueprints (Easy Start mode)
+  const DEMOS = [
+    {
+      vision: "Build a faceless YouTube channel using AI video tools that earns $3–10K/month while you sleep.",
+      monetization: "YouTube AdSense pays you every month based on views. You also sell a simple digital guide in every video description, adding $500–2K/month in extra income.",
+      roi: "300–800% ROI within 90 days",
+      use_case: "If you have a YouTube channel or content brand, here's how this works: Use NotebookLM to turn any topic into a ready-to-record script in minutes. Then use Veo 3 to generate the actual video visuals from that script — no camera, no editing. Your channel runs itself while you keep doing what you normally do.",
+      steps: [
+        { desc: "Pick a high-search niche using Google Trends — meditation, finance tips, or productivity work great for beginners.", tool_link_ref: null },
+        { desc: "Use NotebookLM to research your topic deeply and write 30 video scripts in one afternoon.", tool_link_ref: "NotebookLM" },
+        { desc: "Generate all visuals and AI voiceovers with Veo 3 and upload 3 videos per week consistently.", tool_link_ref: "Veo 3" },
+        { desc: "Create a simple PDF guide (e.g. '10 Meditation Scripts') and link it in every description to earn extra income.", tool_link_ref: null },
+        { desc: "After hitting 1,000 subscribers, turn on AdSense and pitch one sponsor. One sponsor deal = $500–2K.", tool_link_ref: null }
+      ],
+      calendar_summary: "Month 1: Set up the channel and publish 12 videos. Month 2: Optimize SEO, hit 1K subscribers, launch your digital product. Month 3: Enable AdSense, hit monetization threshold, scale to 5 videos/week."
+    },
+    {
+      vision: "Launch an AI-powered newsletter that generates $5K–15K/month from paid memberships and sponsorships.",
+      monetization: "Free newsletter builds a loyal audience fast. You then add a $9–12/month paid tier plus sell two sponsor slots per issue at $500–2K each — all with 4 hours of work per week.",
+      roi: "500% ROI within 6 months",
+      use_case: "If you have a newsletter or content subscription, here's how this works: Use NotebookLM to research and summarize your weekly topic in 30 minutes instead of 4 hours. Then use Gemini in Gmail to write and send the issue automatically. Add a paid tier once you have 500 readers and the income stacks up fast.",
+      steps: [
+        { desc: "Pick a specific audience (example: 'AI tools for real estate agents') and start a free newsletter on Beehiiv.", tool_link_ref: null },
+        { desc: "Use NotebookLM to research and summarize your weekly topic in 30 minutes instead of 4 hours.", tool_link_ref: "NotebookLM" },
+        { desc: "Record a short audio version of your newsletter using Gemini Audio to stand out from text-only newsletters.", tool_link_ref: "Gemini Audio" },
+        { desc: "Post teaser content on LinkedIn and X every week to drive subscribers — 1 post = 50–200 new sign-ups.", tool_link_ref: null },
+        { desc: "At 1,000 subscribers, add a paid tier with exclusive deep-dives and templates at $9–12/month.", tool_link_ref: null }
+      ],
+      calendar_summary: "Month 1: Launch and publish 4 issues, target 200 subscribers. Month 2: Double your posting frequency, hit 1K subscribers, add paid tier. Month 3: Land first sponsor, scale to 3K subscribers."
+    },
+    {
+      vision: "Use AI to build a micro SaaS tool for a specific niche and sell it for $19–99/month per user.",
+      monetization: "You build the tool once using Firebase and Flutter, then charge monthly subscriptions. 100 paying users at $29/month = $2,900/month in recurring revenue — no inventory, no shipping, no overhead.",
+      roi: "1,000%+ ROI once you hit 50 users",
+      use_case: "If you have a local business like a restaurant, salon, or retail shop, here's how this works: Use Agent Mode to describe what you want built — it writes the code for you. Firebase handles all the logins and data storage automatically. You end up with a working tool your customers pay for monthly, with no technical background needed.",
+      steps: [
+        { desc: "Find a painful, repetitive task in your niche that people do manually every week. That is your tool idea.", tool_link_ref: null },
+        { desc: "Use Agent Mode to help you build the core functionality — describe what you want and let AI write most of the code.", tool_link_ref: "Agent Mode" },
+        { desc: "Set up Firebase for user accounts and payments — it handles all the technical backend automatically.", tool_link_ref: "Firebase" },
+        { desc: "Build a simple landing page explaining the tool and launch in a relevant Facebook group or Reddit community.", tool_link_ref: null },
+        { desc: "Use Looker Studio to track which features users use most, then double down on those to reduce cancellations.", tool_link_ref: "Looker Studio" }
+      ],
+      calendar_summary: "Month 1: Build the MVP and get 10 beta users for feedback. Month 2: Fix the biggest complaints and launch publicly, target 30 paid users. Month 3: Create a demo video, post it on social, hit 80–100 paid users."
+    }
+  ];
+
+  // ── Init ─────────────────────────────────────────
+  function init() {
+    populateReels();
+    loadFeed();
+    // Auth state is handled by onAuthStateChange listener
+  }
+
+  // ── Credit / paywall system ──────────────────────
+  function spinsRemaining() { return credits; }
+
+  function updateSpinCounter() {
+    const wrap = document.getElementById('spin-counter-wrap');
+    const lbl  = document.getElementById('spin-counter-label');
+    if (!lbl || !wrap) return;
+    if (credits > 0) {
+      lbl.textContent = credits + ' spins left';
+      lbl.style.color = credits <= 3 ? 'rgba(224,26,47,0.8)' : '#10b981';
+    } else {
+      lbl.textContent = 'Get more spins';
+      lbl.style.color = 'rgba(224,26,47,0.8)';
+    }
+    // Always show counter once user is signed in
+    if (supaUser) wrap.style.display = 'flex';
+  }
+
+  window.showPaywallIfNeeded = function (force) {
+    if (force || spinsRemaining() <= 0) {
+      document.getElementById('paywall-stripe-btn').href = STRIPE_CREDITS_LINK;
+      document.getElementById('paywall-modal').classList.add('open');
+      return true;
+    }
+    return false;
+  };
+
+  window.closePaywall = function () {
+    document.getElementById('paywall-modal').classList.remove('open');
+  };
+
+  // ── Supabase auth listener ───────────────────────
+  _supa.auth.onAuthStateChange(async (event, session) => {
+    if (session && session.user) {
+      supaUser  = session.user;
+      authToken = session.access_token;
+      await loadUserProfile();
+      showSignedIn();
+    } else {
+      supaUser  = null;
+      authToken = null;
+      credits   = 5;
+      bpUnlocked = false;
+      showSignedOut();
+      updateSpinCounter();
+    }
+  });
+
+  async function loadUserProfile() {
+    if (!supaUser) return;
+    const { data } = await _supa
+      .from('profiles')
+      .select('credits, bp_unlocked')
+      .eq('id', supaUser.id)
+      .single();
+    if (data) {
+      credits    = data.credits;
+      bpUnlocked = data.bp_unlocked;
+    }
+    updateSpinCounter();
+  }
+
+  function showSignedIn() {
+    document.getElementById('auth-signed-out').classList.add('hidden');
+    document.getElementById('auth-signed-in').classList.remove('hidden');
+    const lbl = document.getElementById('user-email-label');
+    if (lbl) lbl.textContent = supaUser?.email || '';
+  }
+
+  function showSignedOut() {
+    document.getElementById('auth-signed-out').classList.remove('hidden');
+    document.getElementById('auth-signed-in').classList.add('hidden');
+  }
+
+  window.openSignInModal = function () {
+    document.getElementById('signin-modal').classList.add('open');
+    document.getElementById('signin-email-form').classList.remove('hidden');
+    document.getElementById('signin-sent-msg').classList.add('hidden');
+    document.getElementById('signin-error').classList.add('hidden');
+  };
+
+  window.signOut = async function () {
+    await _supa.auth.signOut();
+    toast('Signed out');
+  };
+
+  // Sign in button handler
+  document.getElementById('signin-send-btn').addEventListener('click', async () => {
+    const email = document.getElementById('signin-email-input').value.trim();
+    const errEl = document.getElementById('signin-error');
+    errEl.classList.add('hidden');
+    if (!email || !email.includes('@')) {
+      errEl.textContent = 'Please enter a valid email.';
+      errEl.classList.remove('hidden');
+      return;
+    }
+    const btn = document.getElementById('signin-send-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    const { error } = await _supa.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.href }
+    });
+    btn.disabled = false;
+    btn.textContent = '✦ \u00A0Send Magic Link';
+    if (error) {
+      errEl.textContent = error.message;
+      errEl.classList.remove('hidden');
+    } else {
+      document.getElementById('signin-sent-email').textContent = email;
+      document.getElementById('signin-email-form').classList.add('hidden');
+      document.getElementById('signin-sent-msg').classList.remove('hidden');
+    }
+  });
+
+  // Close sign-in modal when clicking backdrop
+  document.getElementById('signin-modal').addEventListener('click', function (e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+
+  updateSpinCounter();
+
+  window.toggleStep = function (uid, btn) {
+    const el = document.getElementById(uid);
+    if (!el) return;
+    const isCollapsed = el.style.maxHeight !== 'none';
+    if (isCollapsed) {
+      el.style.maxHeight = 'none';
+      el.style.overflow = 'visible';
+      btn.textContent = 'less ↑';
+    } else {
+      el.style.maxHeight = '2.6em';
+      el.style.overflow = 'hidden';
+      btn.textContent = 'more ↓';
+    }
+  };
+
+  // ── Mode bar ─────────────────────────────────────
+  const MODE_HINTS = {
+    easy:         'Beginner-friendly — plain English steps anyone can follow',
+    Creator:      'Tool-specific — how to use each jackpot tool as a content creator',
+    Entrepreneur: 'Tool-specific — how each jackpot tool generates revenue for your business',
+    Developer:    'Tool-specific — technical deep-dive into building & deploying with each tool',
+  };
+
+  function setActiveMode(modeId, roleVal, isEasy) {
+    ['mode-easy','mode-creator','mode-biz','mode-dev'].forEach(id => {
+      const el = document.getElementById(id);
+      el.classList.remove('active-easy','active-advanced');
+      el.setAttribute('aria-checked','false');
+      const dot = el.querySelector('.mode-dot-adv');
+      if (dot) dot.style.display = 'none';
+    });
+    const active = document.getElementById(modeId);
+    active.classList.add(isEasy ? 'active-easy' : 'active-advanced');
+    active.setAttribute('aria-checked','true');
+    if (!isEasy) {
+      const dot = active.querySelector('.mode-dot-adv');
+      if (dot) dot.style.display = 'block';
+    }
+    easyStart = isEasy;
+    role = roleVal || 'Creator';
+    document.getElementById('mode-hint').textContent = MODE_HINTS[isEasy ? 'easy' : roleVal];
+
+    // Clear stale result so user knows they need to re-spin
+    document.getElementById('result-card').classList.add('hidden');
+    document.getElementById('loader').classList.add('hidden');
+    lastResult = null;
+  }
+
+  document.getElementById('mode-easy').addEventListener('click', () => {
+    if (easyStart) return;
+    setActiveMode('mode-easy', 'Creator', true);
+    toast('Easy Start mode — spin for beginner-friendly output');
+  });
+  document.getElementById('mode-creator').addEventListener('click', () => {
+    setActiveMode('mode-creator', 'Creator', false);
+    toast('Creator mode — spin to see tool-specific steps');
+  });
+  document.getElementById('mode-biz').addEventListener('click', () => {
+    setActiveMode('mode-biz', 'Entrepreneur', false);
+    toast('Entrepreneur mode — spin to see tool-specific revenue steps');
+  });
+  document.getElementById('mode-dev').addEventListener('click', () => {
+    setActiveMode('mode-dev', 'Developer', false);
+    toast('Developer mode — spin for technical tool deep-dives');
+  });
+
+  // ── Niche selector ───────────────────────────────
+  document.getElementById('niche-select').addEventListener('change', e => {
+    const val = e.target.value;
+    const customEl = document.getElementById('custom-niche');
+    if (val === 'Custom...') {
+      customEl.classList.remove('hidden');
+      customEl.focus();
+      niche = '';
+    } else {
+      customEl.classList.add('hidden');
+      niche = val;
+    }
+  });
+  document.getElementById('custom-niche').addEventListener('input', e => {
+    niche = e.target.value.trim() || 'General Business';
+  });
+
+  // ── Reels ────────────────────────────────────────
+  function getTools() {
+    return ALL_TOOLS;
+  }
+  function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function populateReels() {
+    const tools = getTools();
+    [1, 2, 3].forEach(id => {
+      const track = document.getElementById('reel-' + id);
+      track.innerHTML = Array.from({ length: 24 }, () =>
+        `<div class="reel-item">${rand(tools)}</div>`
+      ).join('');
+      track.style.transition = 'none';
+      track.style.transform = 'translateY(0)';
+    });
+  }
+
+  // ── Spin ─────────────────────────────────────────
+  async function spin() {
+    if (spinning) return;
+    // Require sign in
+    if (!supaUser) {
+      openSignInModal();
+      return;
+    }
+    // Paywall check
+    if (spinsRemaining() <= 0) {
+      window.showPaywallIfNeeded(true);
+      return;
+    }
+    spinning = true;
+
+    const btn = document.getElementById('spin-btn');
+    const lbl = document.getElementById('spin-label');
+    btn.disabled = true;
+    lbl.textContent = 'Spinning…';
+
+    const tools = getTools();
+    const override = document.getElementById('tool-override').value.trim();
+
+    // Pick 3 unique tools, retrying up to 6 times to avoid repeating a recent combo
+    let finalPicks;
+    let attempts = 0;
+    do {
+      // Use a Set — mathematically cannot contain duplicates
+      const picked = new Set(override ? [override] : []);
+      let safety = 0;
+      while (picked.size < 3 && safety < 200) {
+        picked.add(rand(tools));
+        safety++;
+      }
+      finalPicks = [...picked].sort(() => Math.random() - 0.5);
+      attempts++;
+    } while (
+      recentCombos.includes([...finalPicks].sort().join('|')) && attempts < 6
+    );
+    // Record this combo so it won't repeat immediately
+    recentCombos.unshift([...finalPicks].sort().join('|'));
+    if (recentCombos.length > 8) recentCombos.pop();
+
+    // Lever animation
+    const lever = document.getElementById('lever');
+    lever.classList.add('lever-pulled');
+    setTimeout(() => lever.classList.remove('lever-pulled'), 550);
+
+    // Reel animation — shuffle tools so no adjacent item repeats during scroll
+    const COUNT = 32;
+    [1, 2, 3].forEach((id, idx) => {
+      const track = document.getElementById('reel-' + id);
+      // Build a shuffled pool with no consecutive duplicates for the scroll animation
+      const pool = [...tools].sort(() => Math.random() - 0.5);
+      const items = [];
+      let last = null;
+      for (let n = 0; n < COUNT - 1; n++) {
+        let pick = pool[n % pool.length];
+        // Swap with next if same as last to avoid visual repeat
+        if (pick === last && pool[(n + 1) % pool.length] !== last) {
+          pick = pool[(n + 1) % pool.length];
+        }
+        items.push(`<div class="reel-item">${pick}</div>`);
+        last = pick;
+      }
+      // Final item is always the guaranteed unique winner
+      items.push(`<div class="reel-item winner">${finalPicks[idx]}</div>`);
+      track.style.transition = 'none';
+      track.style.transform = 'translateY(0)';
+      track.innerHTML = items.join('');
+      track.offsetHeight; // force reflow
+      const duration = 1.6 + idx * 0.32;
+      track.style.transition = `transform ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+      track.style.transform = `translateY(-${(COUNT - 1) * 100}px)`;
+    });
+
+    const spinWait = 1600 + 2 * 320 + 300;
+    await sleep(spinWait);
+
+    lbl.textContent = 'Generating…';
+    await generateBlueprint(role, finalPicks, niche || 'General Business');
+
+    btn.disabled = false;
+    lbl.textContent = '✦  Spin Again';
+    spinning = false;
+  }
+
+  document.getElementById('spin-btn').addEventListener('click', spin);
+  document.getElementById('lever').addEventListener('click', spin);
+  document.getElementById('lever').addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); spin(); }
+  });
+
+  // ── Generate Blueprint ───────────────────────────
+  async function generateBlueprint(r, tools, n) {
+    document.getElementById('loader').classList.remove('hidden');
+    document.getElementById('result-card').classList.add('hidden');
+    document.getElementById('api-error-banner').classList.add('hidden');
+
+    let parsed = null;
+    let apiFailed = false;
+
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + authToken
+        },
+        body: JSON.stringify({ tools, role: r, niche: n, type: easyStart ? 'easy' : 'advanced' })
+      });
+
+      if (res.status === 402) {
+        window.showPaywallIfNeeded(true);
+        document.getElementById('loader').classList.add('hidden');
+        spinning = false;
+        return;
+      }
+
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      // Server returns raw Gemini text — parse JSON from it
+      const raw = data.result || '';
+      const jsonMatch = raw.match(/\{[\s\S]*\}/);
+      if (jsonMatch) parsed = JSON.parse(jsonMatch[0]);
+
+      // Update local credit count from server response
+      if (typeof data.creditsRemaining === 'number') {
+        credits = data.creditsRemaining;
+        updateSpinCounter();
+      }
+    } catch (e) {
+      console.error('generateBlueprint error:', e.message);
+      apiFailed = true;
+    }
+
+    if (!parsed) {
+      apiFailed = true;
+      parsed = easyStart ? buildEasyDemo(tools, n) : buildToolDemo(r, tools, n);
+    }
+
+    lastResult = { ...parsed, tools };
+    renderResult(lastResult, n);
+    if (apiFailed) document.getElementById('api-error-banner').classList.remove('hidden');
+    saveFeedItem({ role: r, tools, niche: n });
+    document.getElementById('loader').classList.add('hidden');
+  }
+
+  // ── Render Result ────────────────────────────────
+  function renderResult(p, displayNiche) {
+    document.getElementById('res-niche').textContent = displayNiche || 'General';
+    document.getElementById('res-title').textContent = (p.tools || []).join(' + ');
+    document.getElementById('res-vision').textContent = p.vision || '';
+    document.getElementById('res-money').textContent = p.monetization || '';
+    document.getElementById('res-roi').textContent = p.roi ? 'Est. ' + p.roi : '';
+    document.getElementById('res-example').textContent = p.use_case || '';
+
+    // ── Mode-specific card styling ──
+    const card = document.getElementById('result-card');
+    card.classList.remove('result-easy', 'result-adv');
+    card.classList.add(easyStart ? 'result-easy' : 'result-adv');
+
+    // Mode badge
+    const badge = document.getElementById('res-mode-badge');
+    if (easyStart) {
+      badge.textContent = '🌱 Easy Start';
+      badge.className = 'inline-block text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-emerald-500/10 text-emerald-400 border-emerald-500/25';
+    } else {
+      const modeLabel = { Creator: '⚡ Creator', Entrepreneur: '⚡ Business', Developer: '⚡ Developer' }[role] || '⚡ Tool-Specific';
+      badge.textContent = modeLabel;
+      badge.className = 'inline-block text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-amber-500/10 text-amber-400 border-amber-500/25';
+    }
+
+    // ── Tool pipeline bar (tool-specific only) ──
+    const pipelineEl = document.getElementById('res-pipeline');
+    if (!easyStart && p.tools && p.tools.length) {
+      pipelineEl.classList.remove('hidden');
+      pipelineEl.innerHTML = p.tools.map((t, i) =>
+        `<span class="pipeline-chip">${t}</span>${i < p.tools.length - 1 ? '<span class="pipeline-arrow">→</span>' : ''}`
+      ).join('');
+    } else {
+      pipelineEl.classList.add('hidden');
+    }
+
+    // ── Steps ──
+    const steps = p.steps || [];
+    document.getElementById('res-steps').innerHTML = steps.map((s, i) => {
+      const raw = (s.desc || s || '').trim();
+      const uid = 'step' + i + Date.now();
+      const cardBg = easyStart ? 'rgba(255,255,255,0.02)' : 'rgba(212,175,55,0.03)';
+
+      // Fix tool name badge: detect "TOOLNAME: description" only in tool-specific mode
+      const match = !easyStart && raw.match(/^([A-Z][A-Z0-9 \-+.]+?):\s*([\s\S]+)$/);
+      const toolName   = match ? match[1] : '';
+      const bodyText   = match ? match[2].trim() : raw;
+
+      // Link — text must go BETWEEN the tags
+      const href = s.tool_link_ref && LINKS[s.tool_link_ref] ? LINKS[s.tool_link_ref] : '';
+      const linkHtml = href
+        ? `<a href="${href}" target="_blank" rel="noopener" style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:6px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.22);color:rgba(212,175,55,0.7);text-decoration:none;white-space:nowrap;flex-shrink:0;">Open →</a>`
+        : '';
+
+      return `<div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:${cardBg};border:1px solid rgba(212,175,55,0.12);border-radius:14px;box-sizing:border-box;width:100%;margin-bottom:0;">
+  <div style="min-width:28px;width:28px;height:28px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.15),rgba(212,175,55,0.03));border:1px solid rgba(212,175,55,0.35);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#D4AF37;flex-shrink:0;margin-top:2px;">${i+1}</div>
+  <div style="flex:1;width:0;min-width:0;">
+    ${toolName ? `<span style="display:inline-block;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;padding:2px 8px;border-radius:5px;margin-bottom:5px;background:rgba(212,175,55,0.1);color:#D4AF37;border:1px solid rgba(212,175,55,0.22);">${toolName}</span>` : ''}
+    <p id="${uid}" style="margin:0;font-size:13px;color:#e0d5b0;font-weight:600;line-height:1.6;white-space:normal;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;max-height:2.6em;overflow:hidden;">${bodyText}</p>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap;">
+      <button onclick="toggleStep('${uid}',this)" style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;border:none;background:none;font-family:inherit;padding:0;color:rgba(212,175,55,0.45);">more ↓</button>
+      ${linkHtml}
+    </div>
+  </div>
+</div>`;
+    }).join('');
+
+    // Calendar
+    if (p.calendar_summary) {
+      document.getElementById('res-calendar').textContent = p.calendar_summary;
+      document.getElementById('res-calendar-wrap').classList.remove('hidden');
+    } else {
+      document.getElementById('res-calendar-wrap').classList.add('hidden');
+    }
+
+    document.getElementById('result-card').classList.remove('hidden');
+    document.getElementById('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ── Copy ─────────────────────────────────────────
+  document.getElementById('copy-btn').addEventListener('click', () => {
+    if (!lastResult) return;
+    const steps = (lastResult.steps || []).map((s, i) => `${i + 1}. ${s.desc || s}`).join('\n');
+    const text = [
+      `GEM N EYE Blueprint: ${(lastResult.tools || []).join(' + ')}`,
+      '',
+      `Vision: ${lastResult.vision}`,
+      '',
+      `How You Get Paid: ${lastResult.monetization}`,
+      `ROI: ${lastResult.roi}`,
+      '',
+      `See It In Action:\n${lastResult.use_case}`,
+      '',
+      `Action Steps:\n${steps}`,
+      '',
+      `90-Day Roadmap: ${lastResult.calendar_summary || ''}`
+    ].join('\n');
+
+    const fallback = () => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      toast('Copied to clipboard!');
+    };
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        toast('Copied to clipboard!');
+        const icon = document.getElementById('copy-icon');
+        icon.style.stroke = '#10b981';
+        setTimeout(() => (icon.style.stroke = ''), 2000);
+      }).catch(fallback);
+    } else {
+      fallback();
+    }
+  });
+
+  // ── Full Blueprint (paid) ────────────────────────
+  async function generateFullBlueprint() {
+    if (!lastResult) { toast('Spin first to get your tool combo!'); return; }
+    const modal   = document.getElementById('full-bp-modal');
+    const loader  = document.getElementById('full-bp-loader');
+    const content = document.getElementById('full-bp-content');
+    const buyBtn  = document.getElementById('full-bp-buy-btn');
+
+    buyBtn.href = STRIPE_LINK;
+    buyBtn.style.display = bpUnlocked ? 'none' : 'inline-flex';
+    content.style.display = 'none';
+    loader.style.display  = 'block';
+    modal.classList.add('open');
+
+    const tools = lastResult.tools || [];
+    const n     = document.getElementById('res-niche').textContent || niche || 'General';
+    const r     = role;
+
+    document.getElementById('full-bp-tools-label').textContent = tools.join(' · ');
+
+    let fbp = null;
+
+    // ── Call /api/generate with type=full ──
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + authToken
+        },
+        body: JSON.stringify({ tools, role: r, niche: n, type: 'full' })
+      });
+      const data = await res.json();
+      if (!data.error) {
+        const raw = data.result || '';
+        const jsonMatch = raw.match(/\{[\s\S]*\}/);
+        if (jsonMatch) fbp = JSON.parse(jsonMatch[0]);
+        if (typeof data.creditsRemaining === 'number') {
+          credits = data.creditsRemaining;
+          updateSpinCounter();
+        }
+      }
+    } catch (e) {
+      console.error('Full blueprint API error:', e.message);
+    }
+
+    if (!fbp) {
+      // Fallback demo blueprint
+      const t0 = tools[0] || 'Tool 1', t1 = tools[1] || 'Tool 2', t2 = tools[2] || 'Tool 3';
+      // API failed — use demo fallback
+      fbp = {
+        headline: tools.join(' + ') + ' Blueprint',
+        executive_summary: `This blueprint combines ${tools.join(', ')} into a single monetization system for ${n}. Built for ${r}s who want to move fast without a big team or budget. Executed well, this combo can generate $1,000–$5,000/month within 90 days.`,
+        value_proposition: `The only ${n} income system that uses ${t0}, ${t1}, and ${t2} together — cutting setup time from months to days.`,
+        positioning_statement: `For ${r}s in ${n} who are stuck trading time for money, this system is the only AI-powered income engine that combines ${t0}, ${t1}, and ${t2} into a single scalable workflow — unlike hiring freelancers or buying courses, which cost more and deliver less.`,
+        target_audience: `${r}s in the ${n} space who are already working but not yet monetizing their knowledge or workflow. They have the skills but lack a repeatable system. They want income that scales without trading more hours.`,
+        competitive_landscape: [
+          { type: 'Direct competitor', name: 'Single-tool AI platforms (e.g. Jasper, Copy.ai)', gap: 'They rely on one tool with no end-to-end workflow — users still have to stitch together distribution and conversion manually.' },
+          { type: 'Indirect alternative', name: 'Hiring freelancers or agencies', gap: 'High cost, slow turnaround, no ownership of the process. The ' + n + ' professional ends up dependent on someone else.' },
+          { type: 'Do nothing', name: 'Manual processes + spreadsheets', gap: 'Costs 10–20 hours/week in labor, limits income to time traded, and creates a ceiling on how much can be earned.' }
+        ],
+        white_space: `Most ${n} ${r}s are using AI tools individually, not as a combined system. The underserved segment is the mid-level ${r} who has an existing audience or client base but no automated monetization workflow. They are too advanced for beginner courses but not technical enough to build custom automations. This combo hits that exact gap.`,
+        competitive_positioning: `Most competitors pick one tool and build around it. This blueprint uses all three in sequence — ${t0} to create, ${t1} to distribute, ${t2} to convert. Tradeoff: requires connecting three tools vs. one, but the result is a more defensible and scalable system. Recommendation: start with ${t0} first to build your content engine before layering in the others.`,
+        revenue_model: `Revenue flows from ${t0} (content or product creation) through ${t1} (distribution and audience building) to ${t2} (conversion and payment collection). Expect service fees, digital product sales, or subscriptions. At 10 paying customers at $100–$500/month each, you hit $1,000–$5,000 MRR without adding headcount.`,
+        income_projection: { month1: '$200–$800 — first paying customers', month2: '$1,000–$2,500 — repeat clients + referrals', month3: '$3,000–$5,000 — systemized recurring income' },
+        marketing: {
+          organic: `Publish weekly content showing your ${t0} workflow. SEO-optimize for "${n} + AI" keywords. Build in a niche community (Reddit, Facebook Groups, Discord) by giving value before promoting.`,
+          paid: `Start with $10–$20/day on Meta (Instagram/Facebook) targeting ${n} professionals aged 25–45. Test 3 hooks in week 4. Scale the winner to $50/day in month 2.`,
+          partnerships: `Partner with complementary ${n} service providers who already have an audience but no AI workflow. Offer a revenue share or white-label arrangement. One good partner can replace 3 months of organic growth.`,
+          email: `Capture emails with a free "starter blueprint" lead magnet. Send a 5-email welcome sequence over 7 days: value, case study, objection handling, offer, urgency close. Aim for a 30%+ open rate.`,
+          social: `Focus on Instagram Reels and LinkedIn for ${n}. Post 3x per week: 1 educational, 1 behind-the-scenes, 1 results/testimonial. Short-form video beats static posts 3:1 for reach right now.`,
+          messaging: `Lead with the outcome, not the tools. Say: "I help ${n} professionals generate recurring income using AI — without hiring or burning out." The tools are the proof, not the pitch.`
+        },
+        roadmap: {
+          week1:  'Focus: Foundation. Set up all 3 tool accounts and connect them. Define your one core offer and price it.',
+          week2:  'Focus: Content system. Create your first 3 pieces of content using ' + t0 + '. Build your lead magnet.',
+          week3:  'Focus: Audience. Post daily on your primary platform. Join 2 niche communities and add value daily.',
+          week4:  'Focus: First launch. Send your offer to your warm audience. Goal: 3 paying customers.',
+          week5:  'Focus: Feedback loop. Talk to every customer. Refine your offer based on what they say.',
+          week6:  'Focus: Paid test. Run your first $10/day ad with the hook that performed best organically.',
+          week7:  'Focus: Email list. Hit 200 subscribers. Set up your 5-email welcome sequence.',
+          week8:  'Focus: Systems. Document your fulfillment workflow. Remove yourself from every manual step you can.',
+          week9:  'Focus: Scale content. Use ' + t1 + ' to repurpose and multiply your best-performing content.',
+          week10: 'Focus: Partnerships. Reach out to 5 potential partners. Propose a referral or rev-share deal.',
+          week11: 'Focus: Conversion optimization. A/B test your offer page headline and CTA. Improve close rate.',
+          week12: 'Focus: Systemize and multiply. Hire a VA for 5 hours/week. Set a Month 4 revenue goal and plan.'
+        },
+        ad_copy: [
+          { platform: 'Instagram / TikTok', hook: 'I replaced my income stream with 3 AI tools in 90 days', body: 'No big team. No huge budget. Just ' + tools.join(', ') + '. Here is the exact workflow I use every week to generate recurring income.' },
+          { platform: 'Email', hook: 'This AI combo is built for ' + n + ' businesses', body: 'Preview: 3 tools, 90 days, real income. Open to see the step-by-step blueprint that works even if you have never used AI before.' },
+          { platform: 'YouTube / Podcast', hook: 'What if 3 AI tools could replace a full-time employee for your ' + n + ' business?', body: 'I am going to walk you through exactly how I use ' + tools.join(', ') + ' together to generate income on autopilot — and I am going to show you every step.' }
+        ],
+        tool_configs: tools.map(t => ({ tool: t, what_to_do: 'Open ' + t + ' and configure your workspace for ' + n + '. Use the settings that match your role as a ' + r + '. Start with the default templates and customize from there.' })),
+        kpis: ['First paying customer within 14 days', '10 customers by end of Month 1', '$1,000 revenue by Day 60', '3+ recurring clients by Month 3']
+      };
+    }
+
+    document.getElementById('full-bp-title').textContent = fbp.headline || (tools.join(' + ') + ' Blueprint');
+    renderFullBlueprint(fbp);
+    loader.style.display  = 'none';
+    content.style.display = 'block';
+  }
+
+  function renderFullBlueprint(fbp) {
+    var body    = document.getElementById('full-bp-body');
+    var ip      = fbp.income_projection || {};
+    var rd      = fbp.roadmap || {};
+    var mkt     = fbp.marketing || {};
+    var cl      = fbp.competitive_landscape || [];
+    var adCopy  = fbp.ad_copy || [];
+    var configs = fbp.tool_configs || [];
+    var kpis    = fbp.kpis || [];
+
+    function sec(label, color, inner) {
+      return '<div style="background:rgba(212,175,55,0.02);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:1.25rem 1.5rem;">'
+        + '<p style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.14em;color:' + color + ';margin-bottom:0.75rem;">' + label + '</p>'
+        + inner + '</div>';
+    }
+    function para(t) {
+      return '<p style="font-size:0.8125rem;color:#e0d5b0;font-weight:500;line-height:1.7;margin:0;">' + (t||'') + '</p>';
+    }
+    function chip(label, txt, labelColor) {
+      return '<div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:rgba(212,175,55,0.02);border:1px solid rgba(212,175,55,0.08);border-radius:9px;">'
+        + '<span style="white-space:nowrap;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;padding:3px 8px;border-radius:5px;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);color:' + (labelColor||'#D4AF37') + ';flex-shrink:0;">' + label + '</span>'
+        + '<p style="font-size:0.8125rem;color:#e0d5b0;font-weight:500;line-height:1.6;margin:0;flex:1;">' + (txt||'—') + '</p>'
+        + '</div>';
+    }
+
+    // Income projection
+    var projHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;">'
+      + ['month1','month2','month3'].map(function(k,i) {
+          return '<div style="background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.15);border-radius:10px;padding:12px 14px;">'
+            + '<p style="font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:rgba(16,185,129,0.5);margin-bottom:4px;">Month ' + (i+1) + '</p>'
+            + '<p style="font-size:0.8125rem;color:#e0d5b0;font-weight:700;line-height:1.5;margin:0;">' + (ip[k]||'—') + '</p>'
+            + '</div>';
+        }).join('') + '</div>';
+
+    // Marketing channels
+    var mktHtml = '<div style="display:flex;flex-direction:column;gap:8px;">'
+      + [['Organic',      mkt.organic,      '#10b981'],
+         ['Paid',         mkt.paid,         '#D4AF37'],
+         ['Partnerships', mkt.partnerships, '#D4AF37'],
+         ['Email',        mkt.email,        '#D4AF37'],
+         ['Social',       mkt.social,       '#a78bfa'],
+         ['Messaging',    mkt.messaging,    '#F5D76A']
+        ].map(function(row) { return chip(row[0], row[1], row[2]); }).join('')
+      + '</div>';
+
+    // 90-day week-by-week roadmap
+    var weeks = ['week1','week2','week3','week4','week5','week6','week7','week8','week9','week10','week11','week12'];
+    var roadmapHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px;">'
+      + weeks.map(function(k,i) {
+          return '<div style="background:rgba(212,175,55,0.02);border:1px solid rgba(212,175,55,0.09);border-radius:10px;padding:10px 12px;">'
+            + '<p style="font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;color:#D4AF37;margin-bottom:5px;">Week ' + (i+1) + '</p>'
+            + '<p style="font-size:0.8rem;color:#e0d5b0;font-weight:500;line-height:1.6;margin:0;">' + (rd[k]||'—') + '</p>'
+            + '</div>';
+        }).join('') + '</div>';
+
+    // Ad copy
+    var adHtml = '<div style="display:flex;flex-direction:column;gap:12px;">'
+      + adCopy.map(function(ad) {
+          return '<div style="background:rgba(167,139,250,0.03);border:1px solid rgba(167,139,250,0.12);border-radius:10px;padding:12px 14px;">'
+            + '<p style="font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:#a78bfa;margin-bottom:6px;">' + (ad.platform||'') + '</p>'
+            + '<p style="font-size:0.8125rem;color:#F5D76A;font-weight:700;line-height:1.5;margin:0 0 4px;">&ldquo;' + (ad.hook||'') + '&rdquo;</p>'
+            + '<p style="font-size:0.8125rem;color:rgba(237,230,208,0.65);font-weight:500;line-height:1.6;margin:0;">' + (ad.body||'') + '</p>'
+            + '</div>';
+        }).join('') + '</div>';
+
+    // Tool config
+    var configHtml = '<div style="display:flex;flex-direction:column;gap:8px;">'
+      + configs.map(function(c) { return chip(c.tool||'', c.what_to_do||'', '#D4AF37'); }).join('')
+      + '</div>';
+
+    // Competitive landscape
+    var clHtml = cl.length
+      ? '<div style="display:flex;flex-direction:column;gap:8px;">'
+        + cl.map(function(c) {
+            var typeColor = c.type && c.type.toLowerCase().includes('direct') ? 'rgba(224,26,47,0.7)'
+                          : c.type && c.type.toLowerCase().includes('indirect') ? '#D4AF37'
+                          : 'rgba(212,175,55,0.45)';
+            return '<div style="background:rgba(224,26,47,0.02);border:1px solid rgba(224,26,47,0.1);border-radius:10px;padding:11px 14px;">'
+              + '<div style="display:flex;gap:8px;align-items:center;margin-bottom:5px;flex-wrap:wrap;">'
+              + '<span style="font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;padding:2px 8px;border-radius:4px;background:rgba(224,26,47,0.07);border:1px solid rgba(224,26,47,0.15);color:' + typeColor + ';white-space:nowrap;">' + (c.type||'') + '</span>'
+              + '<span style="font-size:0.8125rem;color:#e0d5b0;font-weight:700;">' + (c.name||'') + '</span>'
+              + '</div>'
+              + '<p style="font-size:0.8rem;color:rgba(237,230,208,0.6);font-weight:500;line-height:1.6;margin:0;"><span style="color:rgba(224,26,47,0.7);font-weight:900;">Gap: </span>' + (c.gap||'') + '</p>'
+              + '</div>';
+          }).join('')
+        + '</div>'
+      : para('No competitor data available in demo mode.');
+
+    // KPIs
+    var kpiHtml = '<div style="display:flex;flex-wrap:wrap;gap:8px;">'
+      + kpis.map(function(k) {
+          return '<span style="display:inline-block;font-size:9px;font-weight:900;text-transform:uppercase;padding:4px 11px;border-radius:6px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);color:#10b981;">' + k + '</span>';
+        }).join('') + '</div>';
+
+    body.innerHTML = [
+      sec('Executive Summary',           'rgba(212,175,55,0.6)',  para(fbp.executive_summary)),
+      sec('Value Proposition',           'rgba(212,175,55,0.6)',  para(fbp.value_proposition)),
+      sec('Positioning Statement',       'rgba(212,175,55,0.6)',  para(fbp.positioning_statement)),
+      sec('Target Audience',             'rgba(212,175,55,0.6)',  para(fbp.target_audience)),
+      sec('Competitive Landscape',       'rgba(224,26,47,0.7)',   clHtml),
+      sec('White Space Opportunity',     'rgba(16,185,129,0.7)',  para(fbp.white_space)),
+      sec('Competitive Positioning',     'rgba(224,26,47,0.7)',   para(fbp.competitive_positioning)),
+      sec('Revenue Model',               'rgba(212,175,55,0.6)',  para(fbp.revenue_model)),
+      sec('Income Projection',           'rgba(16,185,129,0.7)',  projHtml),
+      sec('Marketing & Promotions',      'rgba(212,175,55,0.6)',  mktHtml),
+      sec('90-Day Week-by-Week Plan',    'rgba(212,175,55,0.6)',  roadmapHtml),
+      sec('Ad Copy Templates',           'rgba(167,139,250,0.7)', adHtml),
+      sec('Tool Configuration Guide',    'rgba(212,175,55,0.6)',  configHtml),
+      sec('KPIs & Success Metrics',      'rgba(16,185,129,0.7)',  kpiHtml)
+    ].join('');
+  }
+
+  // ── Print ────────────────────────────────────────
+  function doPrint() {
+    if (!lastResult) { toast('Spin first to generate a blueprint!'); return; }
+    window.print();
+  }
+  document.getElementById('print-btn').addEventListener('click', doPrint);
+  document.getElementById('blueprint-cta').addEventListener('click', function () {
+    if (!lastResult) { toast('Spin first to get your tool combo!'); return; }
+    if (bpUnlocked) {
+      generateFullBlueprint();
+    } else {
+      document.getElementById('bp-gate-stripe-btn').href = STRIPE_LINK;
+      document.getElementById('bp-gate-modal').classList.add('open');
+    }
+  });
+
+  // ── Feed (localStorage) ─────────────────────────
+  function saveFeedItem(item) {
+    let feed = [];
+    try { feed = JSON.parse(localStorage.getItem('gne_feed') || '[]'); } catch (_) {}
+    feed.unshift({ ...item, ts: Date.now() });
+    if (feed.length > 20) feed.length = 20;
+    localStorage.setItem('gne_feed', JSON.stringify(feed));
+    loadFeed();
+  }
+
+  function loadFeed() {
+    let feed = [];
+    try { feed = JSON.parse(localStorage.getItem('gne_feed') || '[]'); } catch (_) {}
+    const el = document.getElementById('combo-feed');
+    if (!feed.length) {
+      el.innerHTML = '<p style="color:rgba(167,139,250,0.3);font-size:0.75rem;font-style:italic;">Spin to see your combos here...</p>';
+      return;
+    }
+    el.innerHTML = feed.map(item => `
+      <div class="feed-item">
+        <div class="flex justify-between items-center mb-1">
+          <span style="font-size:8px;font-weight:900;text-transform:uppercase;color:#a78bfa;letter-spacing:0.08em;">${item.niche || 'General'}</span>
+          <span style="font-size:8px;font-weight:700;color:rgba(167,139,250,0.45);">${item.role || ''}</span>
+        </div>
+        <p class="text-[11px] text-white font-bold leading-snug">${(item.tools || []).join(' + ')}</p>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('clear-feed').addEventListener('click', () => {
+    localStorage.removeItem('gne_feed');
+    loadFeed();
+    toast('Feed cleared');
+  });
+
+  // ── Toast ────────────────────────────────────────
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove('show'), 3200);
+  }
+
+  // ── Utils ────────────────────────────────────────
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // ── Boot ─────────────────────────────────────────
+  init();
+
+})();
+</script>
+</body>
+</html>

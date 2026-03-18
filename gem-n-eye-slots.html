@@ -79,7 +79,7 @@
     .brand-text {
       font-family: 'Playfair Display', 'Cinzel Decorative', serif;
       font-weight: 900;
-      background: linear-gradient(160deg, #FFE566 0%, #FFD700 35%, #CC9900 65%, #FFE033 100%);
+      background: linear-gradient(160deg, #D4AF37 0%, #FFD700 35%, #CC9900 65%, #FFE033 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -190,6 +190,20 @@
       border: 1px solid rgba(0,170,255,0.22);
       border-radius: 18px; padding: 8px 8px 6px;
       box-shadow: inset 0 2px 16px rgba(0,0,0,0.7), 0 4px 16px rgba(0,0,0,0.5), 0 0 12px rgba(0,170,255,0.08);
+      transition: transform 0.22s ease-out, box-shadow 0.22s ease-out, border-color 0.22s ease-out;
+      transform-origin: center center;
+      position: relative;
+      z-index: 1;
+    }
+    .reel-frame.active-spin {
+      transform: scale(1.1);
+      z-index: 10;
+      border-color: rgba(0,170,255,0.85);
+      box-shadow:
+        inset 0 2px 16px rgba(0,0,0,0.7),
+        0 0 18px rgba(0,170,255,0.7),
+        0 0 50px rgba(0,170,255,0.35),
+        0 8px 28px rgba(0,0,0,0.7);
     }
     .reel-frame-label {
       font-size: 7px; font-weight: 900;
@@ -775,15 +789,15 @@
     <div class="lg:col-span-8 space-y-5">
 
       <!-- Big headline -->
-      <h2 class="text-center no-print" style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(1.75rem,5vw,2.75rem);line-height:1.1;letter-spacing:-0.01em;color:#fff;margin-bottom:8px;">
-        The Digital <span style="background:linear-gradient(160deg,#FFE566 0%,#FFD700 35%,#CC9900 65%,#FFE033 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 18px rgba(255,215,0,0.45));">Jackpot</span>
+      <h2 class="text-center no-print" style="font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(1.75rem,5vw,2.75rem);line-height:1.1;letter-spacing:-0.01em;color:#fff;margin-bottom:8px;">
+        The Digital <span style="background:linear-gradient(160deg,#D4AF37 0%,#FFD700 35%,#CC9900 65%,#FFE033 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 18px rgba(255,215,0,0.45));">Jackpot</span>
       </h2>
 
       <!-- Hero line -->
       <p class="text-center no-print" style="color:rgba(192,192,192,0.55);font-size:0.8125rem;font-weight:500;font-family:'Inter',sans-serif;letter-spacing:0.01em;margin-bottom:-4px;">Transform Google AI assets into scalable revenue. One spin, three tools, endless profit potential.</p>
 
       <!-- Machine card -->
-      <div class="glass amber-ring rounded-[2rem] p-6 md:p-8 slot-section no-print" style="position:relative;overflow:hidden;background:rgba(10,9,14,0.99);">
+      <div class="glass amber-ring rounded-[2rem] p-6 md:p-8 slot-section no-print" style="position:relative;overflow:visible;background:rgba(10,9,14,0.99);">
         <!-- Gold top strip -->
         <div class="casino-top-strip"></div>
 
@@ -1610,36 +1624,45 @@
     lever.classList.add('lever-pulled');
     setTimeout(() => lever.classList.remove('lever-pulled'), 550);
 
-    // Reel animation — shuffle tools so no adjacent item repeats during scroll
+    // Sequential reel animation — each reel zooms forward, spins, lands, then steps back
     const COUNT = 32;
-    [1, 2, 3].forEach((id, idx) => {
+    const REEL_MS = 1700;
+
+    for (let idx = 0; idx < 3; idx++) {
+      const id = idx + 1;
       const track = document.getElementById('reel-' + id);
-      // Build a shuffled pool with no consecutive duplicates for the scroll animation
+      const frame  = document.getElementById('slot-' + id).closest('.reel-frame');
+
+      // Zoom this reel to the front
+      frame.classList.add('active-spin');
+      await sleep(120); // let scale settle before spinning
+
+      // Build shuffled pool with no consecutive duplicates
       const pool = [...tools].sort(() => Math.random() - 0.5);
       const items = [];
       let last = null;
       for (let n = 0; n < COUNT - 1; n++) {
         let pick = pool[n % pool.length];
-        // Swap with next if same as last to avoid visual repeat
         if (pick === last && pool[(n + 1) % pool.length] !== last) {
           pick = pool[(n + 1) % pool.length];
         }
         items.push(`<div class="reel-item">${pick}</div>`);
         last = pick;
       }
-      // Final item is always the guaranteed unique winner
       items.push(`<div class="reel-item winner">${finalPicks[idx]}</div>`);
+
       track.style.transition = 'none';
       track.style.transform = 'translateY(0)';
       track.innerHTML = items.join('');
       track.offsetHeight; // force reflow
-      const duration = 1.6 + idx * 0.32;
-      track.style.transition = `transform ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+      track.style.transition = `transform ${REEL_MS / 1000}s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
       track.style.transform = `translateY(-${(COUNT - 1) * 100}px)`;
-    });
 
-    const spinWait = 1600 + 2 * 320 + 300;
-    await sleep(spinWait);
+      // Wait for reel to land, then step back
+      await sleep(REEL_MS + 80);
+      frame.classList.remove('active-spin');
+      await sleep(220); // brief pause before next reel fires
+    }
 
     lbl.textContent = 'Generating…';
     await generateBlueprint(role, finalPicks, niche || 'General Business');

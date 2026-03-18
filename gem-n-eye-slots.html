@@ -236,16 +236,25 @@
       transition: transform 0.45s cubic-bezier(0.68,-0.55,0.27,1.55); z-index: 2;
       box-shadow: 2px 0 6px rgba(0,0,0,0.5), -1px 0 3px rgba(255,255,255,0.1);
     }
+    @keyframes redPulse {
+      0%, 100% {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 18px rgba(220,20,60,0.6), 0 0 40px rgba(220,20,60,0.25), inset 0 1px 0 rgba(255,255,255,0.25);
+      }
+      50% {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 36px rgba(220,20,60,0.95), 0 0 70px rgba(220,20,60,0.45), inset 0 1px 0 rgba(255,255,255,0.25);
+      }
+    }
     .lever-knob {
       width: 46px; height: 46px;
       background: radial-gradient(circle at 35% 30%, #ff4d6d, #DC143C 55%, #8B0000);
       border-radius: 50%; position: absolute; top: -23px; left: 50%;
       transform: translateX(-50%);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 30px rgba(220,20,60,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+      animation: redPulse 2s ease-in-out infinite;
       transition: box-shadow 0.2s;
     }
     .lever-base:hover .lever-knob {
-      box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 50px rgba(220,20,60,0.7), inset 0 1px 0 rgba(255,255,255,0.25);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 55px rgba(220,20,60,1), 0 0 90px rgba(220,20,60,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+      animation: none;
     }
     .lever-base:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 32px; }
     .lever-pulled .lever-shaft { transform: translateX(-50%) rotate(38deg); }
@@ -396,7 +405,7 @@
       padding: 10px 8px; border-radius: 11px; border: 1px solid transparent;
       font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800;
       text-transform: uppercase; letter-spacing: 0.06em;
-      cursor: pointer; transition: all 0.2s ease; color: rgba(192,192,192,0.35); background: none;
+      cursor: pointer; transition: all 0.2s ease; color: rgba(220,220,230,0.75); background: none;
     }
     .mode-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
     .mode-btn.active-easy {
@@ -789,8 +798,8 @@
     <div class="lg:col-span-8 space-y-5">
 
       <!-- Big headline -->
-      <h2 class="text-center no-print" style="font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(1.75rem,5vw,2.75rem);line-height:1.1;letter-spacing:-0.01em;color:#fff;margin-bottom:8px;">
-        The Digital <span style="background:linear-gradient(160deg,#D4AF37 0%,#FFD700 35%,#CC9900 65%,#FFE033 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 18px rgba(255,215,0,0.45));">Jackpot</span>
+      <h2 class="text-center no-print" style="font-family:'Cinzel Decorative',serif;font-weight:700;font-size:43px;line-height:1.1;margin-bottom:8px;background:linear-gradient(135deg,#F5D76A 0%,#D4AF37 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+        The Digital Jackpot
       </h2>
 
       <!-- Hero line -->

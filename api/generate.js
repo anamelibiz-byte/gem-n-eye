@@ -5,14 +5,14 @@
 // ═══════════════════════════════════════════════
 
 import { createClient } from '@supabase/supabase-js';
+import Anthropic from '@anthropic-ai/sdk';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY  // service role — bypasses RLS
+  process.env.SUPABASE_SERVICE_KEY
 );
 
-const MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-pro'];
-const GEMINI_KEY = process.env.GEMINI_API_KEY;
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export default async function handler(req, res) {
   // CORS — allow your Vercel domain + local dev
@@ -64,35 +64,25 @@ export default async function handler(req, res) {
     ? buildFullPrompt(tools, role, niche)
     : buildQuickPrompt(tools, role, niche);
 
-  // ── 4. Call Gemini with model fallback ────────
+  // ── 4. Call Claude ────────────────────────────
   let result = null;
-  for (const model of MODELS) {
-    try {
-      const gemRes = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.85, maxOutputTokens: type === 'full' ? 4096 : 1200 }
-          })
-        }
-      );
-      const data = await gemRes.json();
-      const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      if (raw) { result = raw; break; }
-    } catch (e) {
-      console.error(`Model ${model} failed:`, e.message);
-    }
+  try {
+    const msg = await anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: type === 'full' ? 4096 : 1200,
+      messages: [{ role: 'user', content: prompt }]
+    });
+    result = msg.content[0]?.text || null;
+  } catch (e) {
+    console.error('Anthropic API error:', e.message);
   }
 
   if (!result) {
-    // Refund the credit if Gemini failed entirely
+    // Refund the credit if API failed
     await supabase.from('profiles')
       .update({ credits: profile.credits, updated_at: new Date().toISOString() })
       .eq('id', user.id);
-    return res.status(502).json({ error: 'Gemini unavailable' });
+    return res.status(502).json({ error: 'API unavailable' });
   }
 
   // ── 5. Log the spin ───────────────────────────
@@ -111,31 +101,76 @@ export default async function handler(req, res) {
 
 function buildQuickPrompt(tools, role, niche) {
   const t = tools.join(', ');
-  const roleCtx = {
-    Creator:      'a content creator focused on audience growth and digital products',
-    Entrepreneur: 'a business owner focused on client revenue and scaling services',
-    Developer:    'a technical builder focused on shipping SaaS products and APIs',
-  }[role] || 'a professional';
 
-  return `You are a senior business strategist and monetization expert.
+  if (role === 'Creator') {
+    return `You are a business strategy assistant. You have been given 3 AI tools: ${t}
+Niche: ${niche}
 
-A ${roleCtx} just spun these 3 Google AI tools: ${t}
-Their niche: ${niche}
+Respond in 3 stacked parts combined into one JSON output:
 
-Write a sharp, practical monetization blueprint in this EXACT JSON format:
+PART 1 — Detailed Business Blueprint: what each tool does, how they combine, best business models, ways to use these tools to build a business and make money, a real-world small business example, and how to get started with practical steps.
+
+PART 2 — Simple Inspiring Pitch: a relatable, motivating version for a non-technical audience. Be honest about the effort required. Make it feel achievable.
+
+PART 3 — Merged Final Output: combine both into one visionary but actionable summary. If the tools don't obviously connect, find the most creative but realistic combination for a small business owner.
+
+Return ONLY valid JSON in this exact format:
 {
-  "headline": "5-8 word punchy title for this combo",
-  "tagline": "One sentence describing the business opportunity",
-  "opportunity": "2-3 sentences on WHY this combo is valuable right now",
+  "vision": "PART 3 merged output — visionary but actionable, 2-3 sentences",
+  "monetization": "PART 1 — business models and ways to make money with these 3 tools combined",
+  "roi": "Realistic income estimate e.g. $1,500–$4,000/month within 60-90 days",
+  "use_case": "PART 1 — real-world small business example. Start with 'For example, a [specific small business]...' and show exactly how the 3 tools work together for them",
   "steps": [
-    { "title": "Step title", "tool": "which tool", "action": "exactly what to do", "output": "what you get" },
-    { "title": "Step title", "tool": "which tool", "action": "exactly what to do", "output": "what you get" },
-    { "title": "Step title", "tool": "which tool", "action": "exactly what to do", "output": "what you get" }
+    {"desc": "PART 1 practical step — specific, actionable, tool-named", "tool_link_ref": "tool name"},
+    {"desc": "PART 1 practical step — specific, actionable, tool-named", "tool_link_ref": "tool name"},
+    {"desc": "PART 1 practical step — specific, actionable, tool-named", "tool_link_ref": "tool name"},
+    {"desc": "PART 1 practical step — specific, actionable, tool-named", "tool_link_ref": "tool name"}
   ],
-  "income_potential": "Realistic monthly range with a specific number e.g. $2,000–$6,000/month",
-  "first_move": "The single most important thing to do in the next 24 hours",
-  "scenario": "A relatable real-world example: 'e.g. A local yoga studio uses [tool] to...'",
-  "time_to_revenue": "Realistic estimate e.g. 2-4 weeks"
+  "calendar_summary": "PART 2 — simple inspiring pitch for a non-technical audience. Relatable, motivating, honest about effort. 3-4 sentences max."
+}
+
+Return ONLY valid JSON. No markdown. No extra text.`;
+  }
+
+  if (role === 'Entrepreneur') {
+    return `You are a senior business strategist. A business owner in the ${niche} space just spun these 3 Google AI tools: ${t}
+
+Write a revenue-focused blueprint showing exactly how to use these tools to land clients, automate services, and build recurring income. Be specific about retainers, subscriptions, and service fees.
+
+Return ONLY valid JSON:
+{
+  "vision": "One sentence: how a ${niche} business owner uses ${t} together to build a scalable income stream",
+  "monetization": "2-3 sentences on the exact revenue model — name each tool and how it contributes to income",
+  "roi": "Realistic monthly range e.g. $2,000–$8,000/month with a timeline",
+  "use_case": "Start with 'If you run a [specific ${niche} business]' — show in 3-4 sentences exactly how these tools work together to save time and make money",
+  "steps": [
+    {"desc": "TOOL NAME: specific revenue-generating action using this tool", "tool_link_ref": "tool name"},
+    {"desc": "TOOL NAME: specific revenue-generating action using this tool", "tool_link_ref": "tool name"},
+    {"desc": "TOOL NAME: specific revenue-generating action using this tool", "tool_link_ref": "tool name"}
+  ],
+  "calendar_summary": "90-day plan: Month 1 — set up and first clients. Month 2 — systemize and scale. Month 3 — recurring revenue and referrals."
+}
+
+Return ONLY valid JSON. No markdown. No extra text.`;
+  }
+
+  // Developer
+  return `You are a senior technical architect. A developer in the ${niche} space just spun these 3 Google AI tools: ${t}
+
+Write a technical blueprint showing exactly how to build and ship a product using these tools — name real features, APIs, and SDKs. Income model is SaaS, API usage fees, and consulting.
+
+Return ONLY valid JSON:
+{
+  "vision": "One sentence: what product or service a developer builds by combining ${t}",
+  "monetization": "2-3 sentences: the technical architecture and how money flows — SaaS pricing, API tiers, or consulting model",
+  "roi": "Realistic MRR target e.g. $3,000–$10,000/month within 90 days of launch",
+  "use_case": "Start with 'Build a [specific product]' — describe in 3-4 sentences the exact technical stack using these 3 tools and what problem it solves",
+  "steps": [
+    {"desc": "TOOL NAME: exact feature, API endpoint, or SDK to use and what to build with it", "tool_link_ref": "tool name"},
+    {"desc": "TOOL NAME: exact feature, API endpoint, or SDK to use and what to build with it", "tool_link_ref": "tool name"},
+    {"desc": "TOOL NAME: exact feature, API endpoint, or SDK to use and what to build with it", "tool_link_ref": "tool name"}
+  ],
+  "calendar_summary": "Ship plan: Week 1-2 — prototype. Week 3-4 — beta users. Month 2 — paid launch. Month 3 — growth and iteration."
 }
 
 Return ONLY valid JSON. No markdown. No extra text.`;

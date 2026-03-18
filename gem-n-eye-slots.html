@@ -811,75 +811,57 @@
       </div>
 
       <!-- Result card -->
-      <div id="result-card" class="hidden glass amber-ring rounded-[2rem] p-6 md:p-8 space-y-6">
+      <div id="result-card" class="hidden glass amber-ring rounded-[2rem] p-6 md:p-8 space-y-4">
 
-        <!-- API error banner (shown only when live API failed and demo was used as fallback) -->
+        <!-- API error banner -->
         <div id="api-error-banner" class="hidden rounded-xl px-4 py-3 flex items-center gap-3" style="background:rgba(224,26,47,0.07);border:1px solid rgba(224,26,47,0.2);">
           <span style="font-size:16px;flex-shrink:0;">⚠️</span>
-          <p style="font-size:0.75rem;color:rgba(237,230,208,0.65);font-weight:600;line-height:1.5;margin:0;">Blueprint generation failed — showing a demo. Please try spinning again in a moment.</p>
+          <p style="font-size:0.8rem;color:#c9bfa8;font-weight:400;line-height:1.5;margin:0;">Blueprint generation failed — showing a demo. Try spinning again in a moment.</p>
         </div>
 
-        <!-- Tool pipeline (only shown in tool-specific mode) -->
-        <div id="res-pipeline" class="hidden pipeline-bar mb-2"></div>
-
-        <!-- Header row -->
+        <!-- Header -->
         <div class="flex items-start justify-between gap-4">
           <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 flex-wrap mb-2">
-              <span id="res-niche" class="inline-block bg-amber-500/10 text-amber-400 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border border-amber-500/20"></span>
-              <span id="res-mode-badge" class="inline-block text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border"></span>
-            </div>
-            <h2 id="res-title" class="text-2xl md:text-3xl font-black text-white leading-tight" style="text-shadow:0 0 20px rgba(245,158,11,0.2)"></h2>
+            <span id="res-niche" class="inline-block bg-amber-500/10 text-amber-400 text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-lg border border-amber-500/20 mb-2"></span>
+            <h2 id="res-title" class="text-2xl md:text-3xl font-black text-white leading-tight"></h2>
           </div>
           <div class="flex gap-2 flex-shrink-0">
-            <button id="copy-btn" aria-label="Copy blueprint text to clipboard"
-              class="w-10 h-10 rounded-xl border border-white/08 bg-white/3 hover:bg-white/08 transition-colors flex items-center justify-center cursor-pointer no-print"
-              title="Copy to clipboard">
-              <svg id="copy-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            <button id="copy-btn" aria-label="Copy blueprint" class="w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer no-print" style="border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);" title="Copy">
+              <svg id="copy-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
             </button>
-            <button id="print-btn" aria-label="Print blueprint or save as PDF"
-              class="w-10 h-10 rounded-xl border border-white/08 bg-white/3 hover:bg-white/08 transition-colors flex items-center justify-center cursor-pointer no-print"
-              title="Print / Save as PDF">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+            <button id="print-btn" aria-label="Print" class="w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer no-print" style="border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);" title="Print">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
             </button>
           </div>
         </div>
 
-        <!-- Vision -->
-        <blockquote id="res-vision" class="text-slate-300 text-base italic font-medium leading-relaxed border-l-2 border-amber-500/35 pl-4"></blockquote>
-
-        <!-- Monetization -->
-        <div style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.18);border-radius:1.5rem;padding:1.25rem;">
-          <p class="section-label mb-3" style="color:var(--gold)">How You Get Paid</p>
-          <p id="res-money" style="color:#ede6d0;font-weight:700;font-size:0.875rem;line-height:1.65;margin-bottom:0.75rem;"></p>
-          <span id="res-roi" style="font-size:0.75rem;font-weight:700;color:rgba(212,175,55,0.75);background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.18);padding:6px 14px;border-radius:8px;display:inline-block;"></span>
+        <!-- Box 1: Blueprint -->
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:1.25rem;padding:1.25rem 1.5rem;">
+          <p id="res-vision" style="color:#c9bfa8;font-size:0.925rem;font-weight:400;line-height:1.75;margin-bottom:0.75rem;"></p>
+          <p id="res-money" style="color:#c9bfa8;font-size:0.925rem;font-weight:400;line-height:1.75;margin-bottom:0.75rem;"></p>
+          <p id="res-example" style="color:#a89e8a;font-size:0.875rem;font-weight:400;line-height:1.7;font-style:italic;"></p>
+          <!-- hidden legacy fields -->
+          <span id="res-roi" style="display:none;"></span>
+          <span id="res-mode-badge" style="display:none;"></span>
+          <div id="res-pipeline" style="display:none;"></div>
         </div>
 
-        <!-- Real-World Scenario -->
-        <div style="background:rgba(224,26,47,0.04);border:1px solid rgba(224,26,47,0.14);border-radius:1.5rem;padding:1.25rem;">
-          <p class="section-label mb-3" style="color:rgba(220,80,100,0.9)">Real-World Scenario</p>
-          <p id="res-example" style="color:rgba(237,230,208,0.8);font-size:0.875rem;font-style:italic;line-height:1.7;"></p>
-        </div>
-
-        <!-- Steps -->
-        <div>
-          <p class="section-label mb-4" style="color:rgba(212,175,55,0.45)">Step-by-Step Action Plan</p>
-          <div id="res-steps" class="space-y-3"></div>
-        </div>
-
-        <!-- 90-day roadmap -->
-        <div id="res-calendar-wrap" class="hidden rounded-[1.5rem] p-5" style="background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.12);">
-          <p class="section-label mb-3" style="color:rgba(212,175,55,0.4)">90-Day Roadmap</p>
-          <p id="res-calendar" style="color:rgba(237,230,208,0.75);font-size:0.875rem;line-height:1.7;"></p>
+        <!-- Box 2: Action Steps -->
+        <div style="background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.12);border-radius:1.25rem;padding:1.25rem 1.5rem;">
+          <p style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.18em;color:rgba(212,175,55,0.5);margin-bottom:1rem;">Action Steps</p>
+          <div id="res-steps" class="space-y-2"></div>
+          <div id="res-calendar-wrap" class="hidden" style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(212,175,55,0.1);">
+            <p id="res-calendar" style="color:#a89e8a;font-size:0.875rem;font-weight:400;line-height:1.7;"></p>
+          </div>
         </div>
 
         <!-- Blueprint CTA -->
-        <div class="no-print rounded-[1.5rem] p-5 flex flex-col sm:flex-row items-center justify-between gap-4" style="background:linear-gradient(135deg,#D4AF37 0%,#A8860A 50%,#D4AF37 100%);box-shadow:0 0 40px rgba(212,175,55,0.25);">
+        <div class="no-print rounded-[1.25rem] p-5 flex flex-col sm:flex-row items-center justify-between gap-4" style="background:linear-gradient(135deg,#D4AF37 0%,#A8860A 50%,#D4AF37 100%);">
           <div>
-            <p style="color:#08070e;font-weight:900;font-size:1rem;line-height:1.3;">Full Implementation Blueprint</p>
-            <p style="color:rgba(8,7,14,0.6);font-size:0.75rem;font-weight:500;margin-top:2px;">90-day calendar, ad copy &amp; tech specs — print or save as PDF</p>
+            <p style="color:#08070e;font-weight:800;font-size:0.95rem;line-height:1.3;">Full Implementation Blueprint</p>
+            <p style="color:rgba(8,7,14,0.55);font-size:0.75rem;font-weight:400;margin-top:2px;">90-day roadmap, ad copy &amp; competitive analysis</p>
           </div>
-          <button id="blueprint-cta" style="background:#08070e;color:#D4AF37;font-weight:900;font-size:0.875rem;padding:12px 24px;border-radius:12px;border:1px solid rgba(212,175,55,0.3);cursor:pointer;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.5);transition:background 0.2s;" onmouseover="this.style.background='#130f20'" onmouseout="this.style.background='#08070e'">
+          <button id="blueprint-cta" style="background:#08070e;color:#D4AF37;font-weight:800;font-size:0.875rem;padding:11px 22px;border-radius:10px;border:1px solid rgba(212,175,55,0.3);cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='#130f20'" onmouseout="this.style.background='#08070e'">
             Get Blueprint — $19
           </button>
         </div>
@@ -1633,70 +1615,23 @@
   function renderResult(p, displayNiche) {
     document.getElementById('res-niche').textContent = displayNiche || 'General';
     document.getElementById('res-title').textContent = (p.tools || []).join(' + ');
+
+    // Box 1: vision + monetization + example
     document.getElementById('res-vision').textContent = p.vision || '';
     document.getElementById('res-money').textContent = p.monetization || '';
-    document.getElementById('res-roi').textContent = p.roi ? 'Est. ' + p.roi : '';
     document.getElementById('res-example').textContent = p.use_case || '';
 
-    // ── Mode-specific card styling ──
-    const card = document.getElementById('result-card');
-    card.classList.remove('result-easy', 'result-adv');
-    card.classList.add(easyStart ? 'result-easy' : 'result-adv');
-
-    // Mode badge
-    const badge = document.getElementById('res-mode-badge');
-    if (easyStart) {
-      badge.textContent = '🌱 Easy Start';
-      badge.className = 'inline-block text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-emerald-500/10 text-emerald-400 border-emerald-500/25';
-    } else {
-      const modeLabel = { Creator: '⚡ Creator', Entrepreneur: '⚡ Business', Developer: '⚡ Developer' }[role] || '⚡ Tool-Specific';
-      badge.textContent = modeLabel;
-      badge.className = 'inline-block text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-amber-500/10 text-amber-400 border-amber-500/25';
-    }
-
-    // ── Tool pipeline bar (tool-specific only) ──
-    const pipelineEl = document.getElementById('res-pipeline');
-    if (!easyStart && p.tools && p.tools.length) {
-      pipelineEl.classList.remove('hidden');
-      pipelineEl.innerHTML = p.tools.map((t, i) =>
-        `<span class="pipeline-chip">${t}</span>${i < p.tools.length - 1 ? '<span class="pipeline-arrow">→</span>' : ''}`
-      ).join('');
-    } else {
-      pipelineEl.classList.add('hidden');
-    }
-
-    // ── Steps ──
+    // Box 2: steps — simple numbered list
     const steps = p.steps || [];
     document.getElementById('res-steps').innerHTML = steps.map((s, i) => {
-      const raw = (s.desc || s || '').trim();
-      const uid = 'step' + i + Date.now();
-      const cardBg = easyStart ? 'rgba(255,255,255,0.02)' : 'rgba(212,175,55,0.03)';
-
-      // Fix tool name badge: detect "TOOLNAME: description" only in tool-specific mode
-      const match = !easyStart && raw.match(/^([A-Z][A-Z0-9 \-+.]+?):\s*([\s\S]+)$/);
-      const toolName   = match ? match[1] : '';
-      const bodyText   = match ? match[2].trim() : raw;
-
-      // Link — text must go BETWEEN the tags
-      const href = s.tool_link_ref && LINKS[s.tool_link_ref] ? LINKS[s.tool_link_ref] : '';
-      const linkHtml = href
-        ? `<a href="${href}" target="_blank" rel="noopener" style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:6px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.22);color:rgba(212,175,55,0.7);text-decoration:none;white-space:nowrap;flex-shrink:0;">Open →</a>`
-        : '';
-
-      return `<div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:${cardBg};border:1px solid rgba(212,175,55,0.12);border-radius:14px;box-sizing:border-box;width:100%;margin-bottom:0;">
-  <div style="min-width:28px;width:28px;height:28px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.15),rgba(212,175,55,0.03));border:1px solid rgba(212,175,55,0.35);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#D4AF37;flex-shrink:0;margin-top:2px;">${i+1}</div>
-  <div style="flex:1;width:0;min-width:0;">
-    ${toolName ? `<span style="display:inline-block;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;padding:2px 8px;border-radius:5px;margin-bottom:5px;background:rgba(212,175,55,0.1);color:#D4AF37;border:1px solid rgba(212,175,55,0.22);">${toolName}</span>` : ''}
-    <p id="${uid}" style="margin:0;font-size:13px;color:#e0d5b0;font-weight:600;line-height:1.6;white-space:normal;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;max-height:2.6em;overflow:hidden;">${bodyText}</p>
-    <div style="display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap;">
-      <button onclick="toggleStep('${uid}',this)" style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;border:none;background:none;font-family:inherit;padding:0;color:rgba(212,175,55,0.45);">more ↓</button>
-      ${linkHtml}
-    </div>
-  </div>
+      const text = (s.desc || s || '').trim();
+      return `<div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,0.07);">
+  <span style="min-width:22px;font-size:11px;font-weight:700;color:#D4AF37;padding-top:2px;">${i+1}.</span>
+  <p style="margin:0;font-size:0.9rem;color:#c9bfa8;font-weight:400;line-height:1.65;">${text}</p>
 </div>`;
     }).join('');
 
-    // Calendar
+    // Box 2: calendar / summary
     if (p.calendar_summary) {
       document.getElementById('res-calendar').textContent = p.calendar_summary;
       document.getElementById('res-calendar-wrap').classList.remove('hidden');

@@ -5,6 +5,7 @@
   "description": "GEM N EYE — AI Monetization Blueprint Engine",
   "type": "module",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
     "@supabase/supabase-js": "^2.45.0",
     "stripe": "^16.0.0"
   },

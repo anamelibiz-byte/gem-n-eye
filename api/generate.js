@@ -121,10 +121,10 @@ Return ONLY valid JSON in this exact format:
   "roi": "Realistic income estimate e.g. $1,500–$4,000/month within 60-90 days",
   "use_case": "PART 1 — real-world small business example. Start with 'For example, a [specific small business]...' and show exactly how the 3 tools work together for them",
   "steps": [
-    {"desc": "PART 1 practical step — specific, actionable, tool-named", "tool_link_ref": "tool name"},
-    {"desc": "PART 1 practical step — specific, actionable, tool-named", "tool_link_ref": "tool name"},
-    {"desc": "PART 1 practical step — specific, actionable, tool-named", "tool_link_ref": "tool name"},
-    {"desc": "PART 1 practical step — specific, actionable, tool-named", "tool_link_ref": "tool name"}
+    {"desc": "TOOL NAME: one punchy sentence — what to do and why. Max 20 words.", "tool_link_ref": "tool name"},
+    {"desc": "TOOL NAME: one punchy sentence — what to do and why. Max 20 words.", "tool_link_ref": "tool name"},
+    {"desc": "TOOL NAME: one punchy sentence — what to do and why. Max 20 words.", "tool_link_ref": "tool name"},
+    {"desc": "TOOL NAME: one punchy sentence — what to do and why. Max 20 words.", "tool_link_ref": "tool name"}
   ],
   "calendar_summary": "PART 2 — simple inspiring pitch for a non-technical audience. Relatable, motivating, honest about effort. 3-4 sentences max."
 }
@@ -144,11 +144,11 @@ Return ONLY valid JSON:
   "roi": "Realistic monthly range e.g. $2,000–$8,000/month with a timeline",
   "use_case": "Start with 'If you run a [specific ${niche} business]' — show in 3-4 sentences exactly how these tools work together to save time and make money",
   "steps": [
-    {"desc": "TOOL NAME: specific revenue-generating action using this tool", "tool_link_ref": "tool name"},
-    {"desc": "TOOL NAME: specific revenue-generating action using this tool", "tool_link_ref": "tool name"},
-    {"desc": "TOOL NAME: specific revenue-generating action using this tool", "tool_link_ref": "tool name"}
+    {"desc": "TOOL NAME: one punchy sentence — specific revenue action. Max 20 words.", "tool_link_ref": "tool name"},
+    {"desc": "TOOL NAME: one punchy sentence — specific revenue action. Max 20 words.", "tool_link_ref": "tool name"},
+    {"desc": "TOOL NAME: one punchy sentence — specific revenue action. Max 20 words.", "tool_link_ref": "tool name"}
   ],
-  "calendar_summary": "90-day plan: Month 1 — set up and first clients. Month 2 — systemize and scale. Month 3 — recurring revenue and referrals."
+  "calendar_summary": "Month 1: set up and first clients. Month 2: systemize and scale. Month 3: recurring revenue and referrals."
 }
 
 Return ONLY valid JSON. No markdown. No extra text.`;
@@ -166,11 +166,11 @@ Return ONLY valid JSON:
   "roi": "Realistic MRR target e.g. $3,000–$10,000/month within 90 days of launch",
   "use_case": "Start with 'Build a [specific product]' — describe in 3-4 sentences the exact technical stack using these 3 tools and what problem it solves",
   "steps": [
-    {"desc": "TOOL NAME: exact feature, API endpoint, or SDK to use and what to build with it", "tool_link_ref": "tool name"},
-    {"desc": "TOOL NAME: exact feature, API endpoint, or SDK to use and what to build with it", "tool_link_ref": "tool name"},
-    {"desc": "TOOL NAME: exact feature, API endpoint, or SDK to use and what to build with it", "tool_link_ref": "tool name"}
+    {"desc": "TOOL NAME: one punchy sentence — exact API or feature to use. Max 20 words.", "tool_link_ref": "tool name"},
+    {"desc": "TOOL NAME: one punchy sentence — exact API or feature to use. Max 20 words.", "tool_link_ref": "tool name"},
+    {"desc": "TOOL NAME: one punchy sentence — exact API or feature to use. Max 20 words.", "tool_link_ref": "tool name"}
   ],
-  "calendar_summary": "Ship plan: Week 1-2 — prototype. Week 3-4 — beta users. Month 2 — paid launch. Month 3 — growth and iteration."
+  "calendar_summary": "Month 1: prototype and first paying user. Month 2: paid launch and beta feedback. Month 3: growth and iteration."
 }
 
 Return ONLY valid JSON. No markdown. No extra text.`;

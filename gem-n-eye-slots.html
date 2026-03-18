@@ -835,23 +835,37 @@
           </div>
         </div>
 
-        <!-- Box 1: Blueprint -->
-        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:1.25rem;padding:1.25rem 1.5rem;">
-          <p id="res-vision" style="color:#c9bfa8;font-size:0.925rem;font-weight:400;line-height:1.75;margin-bottom:0.75rem;"></p>
-          <p id="res-money" style="color:#c9bfa8;font-size:0.925rem;font-weight:400;line-height:1.75;margin-bottom:0.75rem;"></p>
-          <p id="res-example" style="color:#a89e8a;font-size:0.875rem;font-weight:400;line-height:1.7;font-style:italic;"></p>
+        <!-- Box 1: The Strategy -->
+        <div style="border:1px solid rgba(255,255,255,0.08);border-radius:1.25rem;overflow:hidden;">
+          <div style="padding:1.1rem 1.4rem;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <p style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.16em;color:rgba(212,175,55,0.55);margin:0 0 0.45rem 0;">The Play</p>
+            <p id="res-vision" style="color:#ede6d0;font-size:0.975rem;font-weight:400;line-height:1.7;margin:0;"></p>
+          </div>
+          <div style="padding:1.1rem 1.4rem;background:rgba(212,175,55,0.02);border-bottom:1px solid rgba(255,255,255,0.06);">
+            <p style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.16em;color:rgba(212,175,55,0.55);margin:0 0 0.45rem 0;">Revenue</p>
+            <p id="res-money" style="color:#c9bfa8;font-size:0.9rem;font-weight:400;line-height:1.65;margin:0;"></p>
+          </div>
+          <div style="padding:1.1rem 1.4rem;">
+            <p style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.16em;color:rgba(212,175,55,0.55);margin:0 0 0.45rem 0;">Real Example</p>
+            <p id="res-example" style="color:#a89e8a;font-size:0.875rem;font-weight:400;line-height:1.65;margin:0;"></p>
+          </div>
           <!-- hidden legacy fields -->
           <span id="res-roi" style="display:none;"></span>
           <span id="res-mode-badge" style="display:none;"></span>
           <div id="res-pipeline" style="display:none;"></div>
         </div>
 
-        <!-- Box 2: Action Steps -->
-        <div style="background:rgba(212,175,55,0.04);border:1px solid rgba(212,175,55,0.12);border-radius:1.25rem;padding:1.25rem 1.5rem;">
-          <p style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.18em;color:rgba(212,175,55,0.5);margin-bottom:1rem;">Action Steps</p>
-          <div id="res-steps" class="space-y-2"></div>
-          <div id="res-calendar-wrap" class="hidden" style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(212,175,55,0.1);">
-            <p id="res-calendar" style="color:#a89e8a;font-size:0.875rem;font-weight:400;line-height:1.7;"></p>
+        <!-- Box 2: Your Playbook -->
+        <div style="border:1px solid rgba(212,175,55,0.15);border-radius:1.25rem;overflow:hidden;">
+          <div style="padding:0.85rem 1.4rem;background:rgba(212,175,55,0.05);border-bottom:1px solid rgba(212,175,55,0.1);">
+            <p style="font-size:0.8rem;font-weight:700;color:rgba(212,175,55,0.85);margin:0;letter-spacing:0.04em;">Your Playbook</p>
+          </div>
+          <div id="res-steps"></div>
+          <div id="res-calendar-wrap" class="hidden" style="border-top:1px solid rgba(212,175,55,0.1);">
+            <div style="padding:0.6rem 0;background:rgba(0,0,0,0.15);">
+              <p style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.16em;color:rgba(212,175,55,0.55);margin:0 0 0 1.4rem;padding:0.6rem 0 0.4rem 0;">90-Day Timeline</p>
+            </div>
+            <div id="res-calendar"></div>
           </div>
         </div>
 
@@ -1616,24 +1630,54 @@
     document.getElementById('res-niche').textContent = displayNiche || 'General';
     document.getElementById('res-title').textContent = (p.tools || []).join(' + ');
 
-    // Box 1: vision + monetization + example
+    // Box 1: vision, revenue, example
     document.getElementById('res-vision').textContent = p.vision || '';
     document.getElementById('res-money').textContent = p.monetization || '';
     document.getElementById('res-example').textContent = p.use_case || '';
 
-    // Box 2: steps — simple numbered list
+    // Box 2: steps — card per step, tool name as label, first sentence only
     const steps = p.steps || [];
     document.getElementById('res-steps').innerHTML = steps.map((s, i) => {
-      const text = (s.desc || s || '').trim();
-      return `<div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,0.07);">
-  <span style="min-width:22px;font-size:11px;font-weight:700;color:#D4AF37;padding-top:2px;">${i+1}.</span>
-  <p style="margin:0;font-size:0.9rem;color:#c9bfa8;font-weight:400;line-height:1.65;">${text}</p>
+      const raw = (s.desc || s || '').trim();
+
+      // Extract "TOOL NAME: rest of text" pattern
+      const colonIdx = raw.indexOf(':');
+      const before = raw.substring(0, colonIdx);
+      const hasLabel = colonIdx > 0 && colonIdx < 32 && before === before.toUpperCase() && /[A-Z]/.test(before);
+      const toolLabel = hasLabel ? before.trim() : '';
+      const bodyRaw   = hasLabel ? raw.substring(colonIdx + 1).trim() : raw;
+
+      // Show first sentence only (keeps it scannable)
+      const firstDot = bodyRaw.search(/\.\s+[A-Z]/);
+      const display  = firstDot > 0 ? bodyRaw.substring(0, firstDot + 1).trim() : bodyRaw;
+
+      const isLast = i === steps.length - 1;
+      return `<div style="display:flex;gap:1rem;align-items:flex-start;padding:1rem 1.4rem;${isLast ? '' : 'border-bottom:1px solid rgba(212,175,55,0.07);'}">
+  <div style="width:30px;height:30px;min-width:30px;border-radius:50%;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.28);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#D4AF37;">${i + 1}</div>
+  <div style="flex:1;min-width:0;">
+    ${toolLabel ? `<p style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:rgba(212,175,55,0.7);margin:0 0 4px 0;">${toolLabel}</p>` : ''}
+    <p style="font-size:0.9rem;color:#c9bfa8;font-weight:400;line-height:1.6;margin:0;">${display}</p>
+  </div>
 </div>`;
     }).join('');
 
-    // Box 2: calendar / summary
+    // Box 2: 90-day timeline — parsed into Month rows
     if (p.calendar_summary) {
-      document.getElementById('res-calendar').textContent = p.calendar_summary;
+      const cal = p.calendar_summary;
+      const monthMatches = cal.match(/Month\s+\d+[:\-–][^.]+\.?/gi) || [];
+      if (monthMatches.length >= 2) {
+        document.getElementById('res-calendar').innerHTML = monthMatches.map((part, i) => {
+          const label = (part.match(/Month\s+\d+/i) || [`Month ${i+1}`])[0];
+          const txt   = part.replace(/^Month\s+\d+\s*[:\-–]\s*/i, '').replace(/\.$/, '').trim();
+          return `<div style="display:flex;gap:1rem;align-items:flex-start;padding:0.85rem 1.4rem;${i > 0 ? 'border-top:1px solid rgba(212,175,55,0.06);' : ''}">
+  <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:rgba(212,175,55,0.7);white-space:nowrap;padding-top:2px;min-width:54px;">${label}</span>
+  <p style="font-size:0.85rem;color:#a89e8a;font-weight:400;line-height:1.55;margin:0;">${txt}</p>
+</div>`;
+        }).join('');
+      } else {
+        document.getElementById('res-calendar').innerHTML =
+          `<p style="font-size:0.875rem;color:#a89e8a;font-weight:400;line-height:1.65;margin:0;padding:0.85rem 1.4rem;">${cal}</p>`;
+      }
       document.getElementById('res-calendar-wrap').classList.remove('hidden');
     } else {
       document.getElementById('res-calendar-wrap').classList.add('hidden');

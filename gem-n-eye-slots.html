@@ -11,31 +11,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;900&family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Digital Gold Rush palette */
-      --gold:        #FFD700;
-      --gold-bright: #FFE566;
-      --gold-dim:    rgba(255,215,0,0.12);
-      --gold-glow:   rgba(255,215,0,0.35);
-      --gold-border: rgba(255,215,0,0.25);
+      /* Core palette */
+      --gold:        #D4AF37;
+      --gold-bright: #EAC84A;
+      --gold-dim:    rgba(212,175,55,0.14);
+      --gold-glow:   rgba(212,175,55,0.38);
+      --gold-border: rgba(212,175,55,0.28);
+      --neon-blue:   #00AAFF;
+      --neon-glow:   rgba(0,170,255,0.5);
       --crimson:     #DC143C;
       --silver:      #C0C0C0;
-      --purple:      #6C5CE7;
       --success:     #00B894;
-      --bg:          #0D1421;
-      --surface:     rgba(13,20,33,0.97);
+      --bg:          #09080d;
+      --surface:     rgba(11,10,16,0.98);
       /* legacy aliases */
-      --amber: #FFD700;
-      --amber-dim: rgba(255,215,0,0.12);
+      --amber: #D4AF37;
+      --amber-dim: rgba(212,175,55,0.14);
     }
     *, *::before, *::after { box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
       background: var(--bg);
       background-image:
-        radial-gradient(ellipse 80% 45% at 50% 0%,  rgba(255,215,0,0.06), transparent),
-        radial-gradient(ellipse 50% 50% at 100% 100%, rgba(220,20,60,0.05), transparent),
-        radial-gradient(ellipse 40% 60% at 0% 60%, rgba(108,92,231,0.04), transparent),
-        url("data:image/svg+xml,%3Csvg width='44' height='44' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='22' cy='22' r='0.7' fill='rgba(255,215,0,0.05)'/%3E%3C/svg%3E");
+        radial-gradient(ellipse 70% 40% at 50% 0%, rgba(0,170,255,0.04), transparent),
+        radial-gradient(ellipse 50% 50% at 100% 100%, rgba(212,175,55,0.03), transparent),
+        url("data:image/svg+xml,%3Csvg width='44' height='44' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='22' cy='22' r='0.6' fill='rgba(212,175,55,0.04)'/%3E%3C/svg%3E");
       color: #f0ece0;
       min-height: 100vh;
       overflow-x: hidden;
@@ -49,15 +49,30 @@
       background: var(--surface);
       backdrop-filter: blur(32px);
       -webkit-backdrop-filter: blur(32px);
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    /* Neon blue pulsing ring for main boxes */
+    @keyframes neonPulse {
+      0%, 100% {
+        box-shadow:
+          0 0 8px var(--neon-blue),
+          0 0 20px rgba(0,170,255,0.35),
+          0 0 50px rgba(0,170,255,0.12),
+          0 24px 60px rgba(0,0,0,0.8);
+        border-color: rgba(0,170,255,0.45);
+      }
+      50% {
+        box-shadow:
+          0 0 14px var(--neon-blue),
+          0 0 40px rgba(0,170,255,0.55),
+          0 0 80px rgba(0,170,255,0.2),
+          0 24px 60px rgba(0,0,0,0.8);
+        border-color: rgba(0,170,255,0.75);
+      }
     }
     .amber-ring {
-      border: 1px solid var(--gold-border);
-      box-shadow:
-        0 0 0 1px rgba(255,215,0,0.05),
-        0 0 60px rgba(255,215,0,0.06),
-        0 32px 80px rgba(0,0,0,0.7),
-        inset 0 1px 0 rgba(255,215,0,0.08);
+      border: 1px solid rgba(0,170,255,0.45);
+      animation: neonPulse 2.8s ease-in-out infinite;
     }
 
     /* ── Brand ── */
@@ -85,18 +100,18 @@
 
     /* ── Casino top strip on machine ── */
     .casino-top-strip {
-      height: 3px;
+      height: 2px;
       background: linear-gradient(90deg,
         transparent 0%,
-        rgba(255,215,0,0.15) 10%,
-        var(--gold) 30%,
-        var(--gold-bright) 50%,
-        var(--gold) 70%,
-        rgba(255,215,0,0.15) 90%,
+        rgba(0,170,255,0.2) 10%,
+        var(--neon-blue) 30%,
+        rgba(255,255,255,0.9) 50%,
+        var(--neon-blue) 70%,
+        rgba(0,170,255,0.2) 90%,
         transparent 100%);
       border-radius: 2rem 2rem 0 0;
       margin: -1.5rem -1.5rem 1.5rem;
-      box-shadow: 0 0 20px rgba(255,215,0,0.4);
+      box-shadow: 0 0 18px rgba(0,170,255,0.6);
     }
 
     /* ── Pill tabs ── */
@@ -123,31 +138,31 @@
     /* ── Slot machine ── */
     .slot-window {
       height: 100px;
-      background: linear-gradient(180deg, #060d18 0%, #0a1220 50%, #060d18 100%);
-      border: 2px solid rgba(255,215,0,0.4);
+      background: linear-gradient(180deg, #06080e 0%, #09090f 50%, #06080e 100%);
+      border: 1.5px solid rgba(0,170,255,0.5);
       border-radius: 14px;
       overflow: hidden;
       position: relative;
       box-shadow:
-        inset 0 0 40px rgba(0,0,0,0.9),
-        0 0 0 1px rgba(255,215,0,0.07),
-        0 4px 20px rgba(0,0,0,0.5),
-        0 0 20px rgba(255,215,0,0.06);
+        inset 0 0 40px rgba(0,0,0,0.95),
+        0 0 10px rgba(0,170,255,0.25),
+        0 0 24px rgba(0,170,255,0.1),
+        0 4px 20px rgba(0,0,0,0.6);
     }
-    /* gold shimmer line at center */
+    /* blue shimmer line at center */
     .slot-window::before {
       content: ''; position: absolute; left: 0; right: 0;
       top: 50%; transform: translateY(-50%); height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,215,0,0.7), transparent);
+      background: linear-gradient(90deg, transparent, rgba(0,170,255,0.7), transparent);
       z-index: 3; pointer-events: none;
     }
     .slot-window::after {
       content: ''; position: absolute; inset: 0;
       background: linear-gradient(to bottom,
-        rgba(255,215,0,0.04) 0%,
+        rgba(0,170,255,0.03) 0%,
         transparent 25%,
         transparent 75%,
-        rgba(0,0,0,0.4) 100%);
+        rgba(0,0,0,0.5) 100%);
       pointer-events: none; z-index: 2;
     }
     .reel-track {
@@ -171,10 +186,10 @@
 
     /* ── Reel frame ── */
     .reel-frame {
-      background: linear-gradient(180deg, #111e30 0%, #0d1828 100%);
-      border: 1px solid rgba(255,215,0,0.18);
+      background: linear-gradient(180deg, #0e0d14 0%, #0a0910 100%);
+      border: 1px solid rgba(0,170,255,0.22);
       border-radius: 18px; padding: 8px 8px 6px;
-      box-shadow: inset 0 2px 16px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.4);
+      box-shadow: inset 0 2px 16px rgba(0,0,0,0.7), 0 4px 16px rgba(0,0,0,0.5), 0 0 12px rgba(0,170,255,0.08);
     }
     .reel-frame-label {
       font-size: 7px; font-weight: 900;
@@ -223,33 +238,33 @@
 
     /* ── Spin button ── */
     .spin-btn {
-      background: linear-gradient(135deg, #FFE566 0%, #FFD700 40%, #CC9900 80%, #FFD700 100%);
-      color: #0D1421; font-weight: 900; font-size: 12px;
+      background: linear-gradient(135deg, #33BBFF 0%, #00AAFF 40%, #0077CC 80%, #00AAFF 100%);
+      color: #ffffff; font-weight: 900; font-size: 12px;
       font-family: 'Montserrat', sans-serif;
       text-transform: uppercase; letter-spacing: 0.15em;
       padding: 17px 48px; border-radius: 50px; border: none; cursor: pointer;
-      box-shadow: 0 0 36px rgba(255,215,0,0.45), 0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+      box-shadow: 0 0 30px rgba(0,170,255,0.55), 0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
       transition: box-shadow 0.2s, transform 0.15s;
       position: relative; overflow: hidden;
     }
     .spin-btn::before {
       content: ''; position: absolute; top: 0; left: -120%; width: 60%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
       transition: left 0.55s ease;
     }
     .spin-btn:hover:not(:disabled)::before { left: 160%; }
     .spin-btn:hover:not(:disabled) {
-      box-shadow: 0 0 56px rgba(255,215,0,0.65), 0 10px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+      box-shadow: 0 0 50px rgba(0,170,255,0.75), 0 10px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
       transform: translateY(-2px);
     }
     .spin-btn:active:not(:disabled) { transform: translateY(0); }
     .spin-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .spin-btn:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+    .spin-btn:focus-visible { outline: 2px solid #33BBFF; outline-offset: 3px; }
 
     /* ── Form fields ── */
     .field {
       width: 100%;
-      background: rgba(13,20,33,0.98);
+      background: rgba(8,7,12,0.99);
       border: 1px solid rgba(255,215,0,0.14);
       border-radius: 12px; padding: 10px 14px;
       font-size: 12px; font-weight: 600; color: #f0ece0;
@@ -358,8 +373,8 @@
     /* ── Mode bar ── */
     .mode-bar {
       display: flex; gap: 6px;
-      background: rgba(13,20,33,0.98);
-      border: 1px solid rgba(255,215,0,0.12);
+      background: rgba(8,7,12,0.99);
+      border: 1px solid rgba(0,170,255,0.1);
       border-radius: 16px; padding: 5px;
     }
     .mode-btn {
@@ -411,13 +426,13 @@
     }
     .step-toggle:hover { color: rgba(212,175,55,0.9); }
 
-    /* ── Jackpot pulse (result card) ── */
+    /* ── Jackpot reveal — neon blue flash then settles into pulse ── */
     @keyframes jackpotReveal {
-      0%   { box-shadow: 0 0 0 0 rgba(255,215,0,0); }
-      40%  { box-shadow: 0 0 50px 10px rgba(255,215,0,0.25), 0 0 0 2px rgba(220,20,60,0.12); }
-      100% { box-shadow: 0 0 60px rgba(255,215,0,0.07), 0 32px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,215,0,0.1); }
+      0%   { box-shadow: 0 0 0 0 rgba(0,170,255,0); border-color: rgba(0,170,255,0.2); }
+      35%  { box-shadow: 0 0 60px 12px rgba(0,170,255,0.6), 0 0 120px rgba(0,170,255,0.2); border-color: rgba(0,170,255,0.9); }
+      100% { box-shadow: 0 0 14px var(--neon-blue), 0 0 40px rgba(0,170,255,0.55), 0 0 80px rgba(0,170,255,0.2), 0 24px 60px rgba(0,0,0,0.8); border-color: rgba(0,170,255,0.75); }
     }
-    #result-card:not(.hidden) { animation: jackpotReveal 0.9s ease-out forwards; }
+    #result-card:not(.hidden) { animation: jackpotReveal 0.8s ease-out forwards, neonPulse 2.8s ease-in-out 0.8s infinite; }
 
     /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 4px; }
@@ -715,7 +730,7 @@
       <p class="text-center no-print" style="color:rgba(192,192,192,0.55);font-size:0.8125rem;font-weight:500;font-family:'Inter',sans-serif;letter-spacing:0.01em;margin-bottom:-4px;">Spin 3 Google AI tools, get an instant monetization blueprint — then upgrade for the full 90-day strategy.</p>
 
       <!-- Machine card -->
-      <div class="glass amber-ring rounded-[2rem] p-6 md:p-8 slot-section no-print" style="position:relative;overflow:hidden;">
+      <div class="glass amber-ring rounded-[2rem] p-6 md:p-8 slot-section no-print" style="position:relative;overflow:hidden;background:rgba(10,9,14,0.99);">
         <!-- Gold top strip -->
         <div class="casino-top-strip"></div>
 
@@ -826,7 +841,7 @@
       </div>
 
       <!-- Result card -->
-      <div id="result-card" class="hidden glass amber-ring rounded-[2rem] p-6 md:p-8 space-y-4">
+      <div id="result-card" class="hidden glass amber-ring rounded-[2rem] p-6 md:p-8 space-y-4" style="background:rgba(10,9,14,0.99);">
 
         <!-- API error banner -->
         <div id="api-error-banner" class="hidden rounded-xl px-4 py-3 flex items-center gap-3" style="background:rgba(224,26,47,0.07);border:1px solid rgba(224,26,47,0.2);">
@@ -858,7 +873,7 @@
           </div>
           <div style="padding:1.1rem 1.4rem;background:rgba(255,215,0,0.02);border-bottom:1px solid rgba(255,255,255,0.05);">
             <p style="font-size:9px;font-weight:800;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:0.18em;color:rgba(255,215,0,0.55);margin:0 0 0.5rem 0;">Revenue</p>
-            <p id="res-money" style="color:rgba(240,236,224,0.85);font-size:0.9rem;font-weight:400;line-height:1.65;margin:0;font-family:'Inter',sans-serif;"></p>
+            <div id="res-money" style="color:rgba(240,236,224,0.85);font-size:0.9rem;font-weight:400;line-height:1.65;margin:0;font-family:'Inter',sans-serif;"></div>
           </div>
           <div style="padding:1.1rem 1.4rem;background:rgba(108,92,231,0.02);">
             <p style="font-size:9px;font-weight:800;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:0.18em;color:rgba(192,192,192,0.4);margin:0 0 0.5rem 0;">Real Example</p>
@@ -1645,9 +1660,23 @@
     document.getElementById('res-niche').textContent = displayNiche || 'General';
     document.getElementById('res-title').textContent = (p.tools || []).join(' + ');
 
-    // Box 1: vision, revenue, example
+    // Box 1: vision, revenue (parsed as numbered list), example
     document.getElementById('res-vision').textContent = p.vision || '';
-    document.getElementById('res-money').textContent = p.monetization || '';
+
+    // Parse "(1) ... (2) ... (3) ..." into separate rows
+    const moneyRaw = p.monetization || '';
+    const moneyItems = moneyRaw.split(/\(\d+\)/).map(s => s.trim()).filter(Boolean);
+    if (moneyItems.length > 1) {
+      document.getElementById('res-money').innerHTML = moneyItems.map((item, i) =>
+        `<div style="display:flex;gap:10px;align-items:flex-start;${i > 0 ? 'margin-top:8px;' : ''}">
+          <span style="min-width:20px;font-size:10px;font-weight:800;font-family:'Montserrat',sans-serif;color:rgba(212,175,55,0.7);padding-top:2px;">(${i+1})</span>
+          <span style="font-size:0.875rem;color:rgba(240,236,224,0.85);font-weight:400;font-family:'Inter',sans-serif;line-height:1.6;">${item}</span>
+        </div>`
+      ).join('');
+    } else {
+      document.getElementById('res-money').textContent = moneyRaw;
+    }
+
     document.getElementById('res-example').textContent = p.use_case || '';
 
     // Box 2: steps — card per step, tool name as label, first sentence only

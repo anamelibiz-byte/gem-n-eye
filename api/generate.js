@@ -117,7 +117,7 @@ PART 3 — Merged Final Output: combine both into one visionary but actionable s
 Return ONLY valid JSON in this exact format:
 {
   "vision": "PART 3 merged output — visionary but actionable, 2-3 sentences",
-  "monetization": "PART 1 — business models and ways to make money with these 3 tools combined",
+  "monetization": "(1) First revenue stream — specific and direct. (2) Second revenue stream. (3) Third revenue stream or upsell.",
   "roi": "Realistic income estimate e.g. $1,500–$4,000/month within 60-90 days",
   "use_case": "PART 1 — real-world small business example. Start with 'For example, a [specific small business]...' and show exactly how the 3 tools work together for them",
   "steps": [
@@ -140,7 +140,7 @@ Write a revenue-focused blueprint showing exactly how to use these tools to land
 Return ONLY valid JSON:
 {
   "vision": "One sentence: how a ${niche} business owner uses ${t} together to build a scalable income stream",
-  "monetization": "2-3 sentences on the exact revenue model — name each tool and how it contributes to income",
+  "monetization": "(1) Primary income stream with price point. (2) Secondary stream or upsell. (3) Recurring revenue or referral model.",
   "roi": "Realistic monthly range e.g. $2,000–$8,000/month with a timeline",
   "use_case": "Start with 'If you run a [specific ${niche} business]' — show in 3-4 sentences exactly how these tools work together to save time and make money",
   "steps": [
@@ -162,7 +162,7 @@ Write a technical blueprint showing exactly how to build and ship a product usin
 Return ONLY valid JSON:
 {
   "vision": "One sentence: what product or service a developer builds by combining ${t}",
-  "monetization": "2-3 sentences: the technical architecture and how money flows — SaaS pricing, API tiers, or consulting model",
+  "monetization": "(1) SaaS or API tier pricing model. (2) Consulting or white-label revenue. (3) Marketplace or usage-based upsell.",
   "roi": "Realistic MRR target e.g. $3,000–$10,000/month within 90 days of launch",
   "use_case": "Start with 'Build a [specific product]' — describe in 3-4 sentences the exact technical stack using these 3 tools and what problem it solves",
   "steps": [
